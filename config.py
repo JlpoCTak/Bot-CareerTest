@@ -1,0 +1,1 @@
+url='https://college.edunetwork.ru/specs/'
