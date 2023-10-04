@@ -1,17 +1,31 @@
 def prologue():
-    print("вы предпочтёте работать:")
+    print(":")
 
     choice = input("Введите номер ответа: ")
 
-    if choice == "с людьми ":
-        inspect_room()
-    elif choice == "":
+    if choice == "1":
+        GLINOMES()
+    elif choice == "2":
+        informationalTechnology()
+    elif choice == "3":
+        energetics()
+    elif choice == "4":
+        stay_in_bed()
+    elif choice == "5":
+        stay_in_bed()
+    elif choice == "6":
+        stay_in_bed()
+    elif choice == "7":
+        stay_in_bed()
+    elif choice == "8":
+        stay_in_bed()
+    elif choice == "9":
         stay_in_bed()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
         prologue()
 
-def inspect_room():
+def GLINOMES():
     print("Вы осматриваете комнату и замечаете на столе ключ.")
     print("Что будем делать?")
     print("1. Взять ключ и идти к двери.")
