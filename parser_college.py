@@ -71,7 +71,7 @@ def find_cities(page_city):
 
                 for republic in republics:
                     r = republic.getText()
-                    print(f'{i}){r}:')
+                    # print(f'{i}){r}:')
                     file.write(f'{i}){r}:\n')
                     i+=1
                     for cities in section_cities:
@@ -86,7 +86,7 @@ def find_cities(page_city):
                             browser = mechanicalsoup.StatefulBrowser()
                             browser.open(f'{url_without_specs}{city_url}')
                             page = browser.page
-                            print(f'\t{c}:')
+                            # print(f'\t{c}:')
                             colleges_names = page.find_all('p', 'unit-name')
 
                             for href_college_unit in colleges_names:
@@ -101,7 +101,7 @@ def find_cities(page_city):
                                     for college_name_tag in college_name_content:
                                         if college_name_tag.find('h1') is not None:
                                             college_name = college_name_tag.find('h1').getText()
-                                            print(f'\t\t{college_name}:')
+                                            # print(f'\t\t{college_name}:')
                                             file.write(f'\t\t{college_name}:\n')
                                             college_spec_tag = college_page.find('section',id = 'lic_okso')
 
@@ -116,14 +116,14 @@ def find_cities(page_city):
                                                         if j !=2:
                                                             if j==0:
                                                                 spec_id = string_id.getText()
-                                                                print(f'\t\t\t{spec_id} ',end='')
+                                                                # print(f'\t\t\t{spec_id} ',end='')
                                                                 file.write(f'\t\t\t{spec_id} ')
                                                             elif j==1:
                                                                 spec_name = string_id.getText()
-                                                                print(f'{spec_name} ', end='')
+                                                                # print(f'{spec_name} ', end='')
                                                                 file.write(f'{spec_name} ')
                                                         else:
-                                                            print()
+                                                            # print()
                                                             file.write(f'\n')
                                                         j+=1
 
