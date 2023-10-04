@@ -1,37 +1,49 @@
-def prologue():
-    print(":")
+GLINOMES = 0
+InfTechnology = 0
+Energetic = 0
+Builder = 0
+Promishlennost = 0
+Build_Transport = 0
+Med_science = 0
+I_see_you_hate_people = 0
+stick_stick_man = 0
 
-    choice = input("Введите номер ответа: ")
+def viberi_ulicu_pls():                 #попытка отсечь как можно больше профессий друг от друга
+    print("вы предпочтёте работать:")
+    print("1. на улице")
+    print("2. в офисе")
+    print("3. в мастерской")
 
+    choice = input("Введите номер ответа: ") #мама выгнала на улицу
     if choice == "1":
+        GLINOMES+=1
+        Builder
         GLINOMES()
-    elif choice == "2":
-        informationalTechnology()
-    elif choice == "3":
-        energetics()
-    elif choice == "4":
-        stay_in_bed()
-    elif choice == "5":
-        stay_in_bed()
-    elif choice == "6":
-        stay_in_bed()
-    elif choice == "7":
-        stay_in_bed()
-    elif choice == "8":
-        stay_in_bed()
-    elif choice == "9":
-        stay_in_bed()
+
+    elif choice == "2":                         #обиженных закрыли в комнате
+        informationalTechnology+=1
+        Energetic+=1
+        I_see_you_hate_people+=1
+        Med_science += 1
+        Builder += 1
+        popal_v_office()
+
+    elif choice == "3":             #мама сказал у тебя круто получилось нарисовать палочку
+         stick_stick_man += 1
+         Promishlennost += 1
+         Energetic += 1
+         Build_Transport +=1
+         prosnulsia_na_rabote()
+
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
         prologue()
 
 def GLINOMES():
-    print("Вы осматриваете комнату и замечаете на столе ключ.")
-    print("Что будем делать?")
-    print("1. Взять ключ и идти к двери.")
-    print("2. Подойти к окну и заглянуть вниз.")
-
-    choice = input("Введите номер выбора: ")
+    print("Вы бы хотели изучать")
+    print("1.Земные породы, архитуктуры")
+    print("2.преобразованием химчских элементов, ")
+    choice = input("Введите номер ответа: ")                    #глиномесы и строители
 
     if choice == "1":
         take_key()
@@ -41,56 +53,41 @@ def GLINOMES():
         print("Некорректный выбор. Попробуйте еще раз.")
         inspect_room()
 
-def stay_in_bed():
-    print("Вы остаетесь лежать и начинаете задумываться о своем прошлом.")
-    print("Прошлое напоминает о важной задаче, которую нужно выполнить.")
-    print("Что будем делать?")
-    print("1. Встать и начать выполнять задачу.")
-    print("2. Остаться лежать и отложить задачу на потом.")
+def popal_v_office():
+    print("")
 
     choice = input("Введите номер выбора: ")
 
     if choice == "1":
-        start_task()
+        ()
     elif choice == "2":
-        postpone_task()
+        ()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
         stay_in_bed()
 
-def take_key():
-    print("Вы берете ключ себе и направляетесь к двери.")
-    print("Как вы будете открывать дверь?")
-    print("1. Вставить ключ в замочную скважину и повернуть его.")
-    print("2. Попробовать выломать дверь.")
+def prosnulsia_na_rabote():
+    print("")
 
     choice = input("Введите номер выбора: ")
 
     if choice == "1":
-        open_door_with_key()
+        ()
     elif choice == "2":
-        break_door()
+        ()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
-        take_key()
+        ()
 
-def look_out_of_window():
+def ():
     print("Вы подходите к окну и заглядываете вниз.")
-    print("Ниже виднеется длинная лестница, ведущая вниз.")
-    print("Что будем делать?")
-    print("1. Спуститься по лестнице.")
-    print("2. Открыть окно и вылезть наружу.")
 
     choice = input("Введите номер выбора: ")
 
     if choice == "1":
-        go_down_stairs()
+        ()
     elif choice == "2":
-        climb_out_of_window()
+        ()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
-        look_out_of_window()
-
-# Далее можно продолжить с различными сценариями и выборами.
-
-prologue()
+        ()
