@@ -54,49 +54,78 @@ def find_cities(page_city):
 
     colleges_names = page.find_all('p', 'unit-name')
 
-
-    for href_college_unit in colleges_names:
-        content_college = href_college_unit.find('a')
-
-        for college_unit_name in content_college:
-            college_name = college_unit_name.getText()
-            href_college = content_college.get('href')
-            print(href_college)
-            page_college = browser.open(f'{url_without_specs}{href_college}')
+    i=0
 
 
-    # sections = page_city.find_all('div', 'col l9 s12')
-    # with open('database/cities.txt', 'w', encoding='utf-8') as file:
-    #     i=1
-    #     for section in sections:
-    #         sect = section.find_all('section')
-    #         for s in sect:
-    #             republics = s.find_all('b')
-    #             section_cities = s.find_all('ul')
-    #             # print(section_cities)
-    #
-    #             for republic in republics:
-    #                 r = republic.getText()
-    #
-    #                 file.write(f'{i}){r}:\n')
-    #                 i+=1
-    #                 for cities in section_cities:
-    #                     city = cities.find_all('a')
-    #
-    #                     for ci in city:
-    #                         c = ci.getText()
-    #
-    #                         print(ci.get('href'))
-    #                         file.write(f'\t {c}  \n')
-    #                         college_url = ci.get('href')
-    #                         browser = mechanicalsoup.StatefulBrowser()
-    #                         browser.open(f'{url_without_specs}{college_url}')
-    #                         page = browser.page
-    #
-    #                         colleges_names = page.find_all('p', 'unit-name')
-    #
-    #                         for college_unit_name in colleges_names:
-    #                             print(college_unit_name.getText())
+
+
+    sections = page_city.find_all('div', 'col l9 s12')
+    with open('database/cities.txt', 'w', encoding='utf-8') as file:
+        i=1
+        for section in sections:
+            sect = section.find_all('section')
+            for s in sect:
+                republics = s.find_all('b')
+                section_cities = s.find_all('ul')
+                # print(section_cities)
+
+                for republic in republics:
+                    r = republic.getText()
+                    print(f'{i}){r}:')
+                    file.write(f'{i}){r}:\n')
+                    i+=1
+                    for cities in section_cities:
+                        city = cities.find_all('a')
+
+                        for ci in city:
+                            c = ci.getText()
+
+                            city_url = ci.get('href')
+                            file.write(f'\t {c}:  \n')
+
+                            browser = mechanicalsoup.StatefulBrowser()
+                            browser.open(f'{url_without_specs}{city_url}')
+                            page = browser.page
+                            print(f'\t{c}:')
+                            colleges_names = page.find_all('p', 'unit-name')
+
+                            for href_college_unit in colleges_names:
+                                    content_college = href_college_unit.find('a')
+
+                                    href_college = content_college.get('href')
+
+                                    open_college_page = mechanicalsoup.StatefulBrowser()
+                                    open_college_page.open(f'{url_without_specs}{href_college}')
+                                    college_page = open_college_page.page
+                                    college_name_content = college_page.find_all('div', 'card-content')
+                                    for college_name_tag in college_name_content:
+                                        if college_name_tag.find('h1') is not None:
+                                            college_name = college_name_tag.find('h1').getText()
+                                            print(f'\t\t{college_name}:')
+                                            file.write(f'\t\t{college_name}:\n')
+                                            college_spec_tag = college_page.find('section',id = 'lic_okso')
+
+                                            if college_spec_tag is not None:
+                                                # print(college_spec_tag.find_all('tr'))
+                                                for test in college_spec_tag.find_all('tr'):
+
+                                                    string_id_spec_kval = test.find_all('td')
+                                                    # print(string_id_spec_kval)
+                                                    j=0
+                                                    for string_id in string_id_spec_kval:
+                                                        if j !=2:
+                                                            if j==0:
+                                                                spec_id = string_id.getText()
+                                                                print(f'\t\t\t{spec_id} ',end='')
+                                                                file.write(f'\t\t\t{spec_id} ')
+                                                            elif j==1:
+                                                                spec_name = string_id.getText()
+                                                                print(f'{spec_name} ', end='')
+                                                                file.write(f'{spec_name} ')
+                                                        else:
+                                                            print()
+                                                            file.write(f'\n')
+                                                        j+=1
 
 
 
