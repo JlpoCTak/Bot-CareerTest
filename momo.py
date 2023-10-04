@@ -1,11 +1,11 @@
-def ():
-    print("")
+def prologue():
+    print("вы предпочтёте работать:")
 
     choice = input("Введите номер ответа: ")
 
-    if choice == "1":
+    if choice == "с людьми ":
         inspect_room()
-    elif choice == "2":
+    elif choice == "":
         stay_in_bed()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
@@ -61,7 +61,13 @@ def take_key():
         take_key()
 
 def look_out_of_window():
+    print("Вы подходите к окну и заглядываете вниз.")
+    print("Ниже виднеется длинная лестница, ведущая вниз.")
+    print("Что будем делать?")
+    print("1. Спуститься по лестнице.")
+    print("2. Открыть окно и вылезть наружу.")
 
+    choice = input("Введите номер выбора: ")
 
     if choice == "1":
         go_down_stairs()
