@@ -2,7 +2,7 @@ import functools
 
 from config import *
 import mechanicalsoup
-from pysondb import db
+# rom pysondb import db
 
 def connection_page_specs():
     browser = mechanicalsoup.StatefulBrowser()
