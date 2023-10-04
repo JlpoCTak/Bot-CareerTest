@@ -60,11 +60,11 @@ def find_cities(page_city):
 
         for college_unit_name in content_college:
             college_name = college_unit_name.getText()
-            # href_college = college_unit_name.get('href')
-            print(content_college)
+            href_college = content_college.get('href')
+            print(href_college)
+            page_college = browser.open(f'{url_without_specs}{href_college}')
 
 
-        page_college = browser.open(f'{url_without_specs}')
     # sections = page_city.find_all('div', 'col l9 s12')
     # with open('database/cities.txt', 'w', encoding='utf-8') as file:
     #     i=1
