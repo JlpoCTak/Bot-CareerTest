@@ -16,7 +16,7 @@ def viberi_ulicu_pls():                 #попытка отсечь как мо
 
     choice = input("Введите номер ответа: ") #мама выгнала на улицу
     if choice == "1":
-        GLINOMES+=1
+        GLINOMES += 1
         Builder
         GLINOMES()
 
@@ -37,7 +37,7 @@ def viberi_ulicu_pls():                 #попытка отсечь как мо
 
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
-        prologue()
+        viberi_ulicu_pls()
 
 def GLINOMES():
     print("Вы бы хотели изучать")
@@ -46,12 +46,12 @@ def GLINOMES():
     choice = input("Введите номер ответа: ")                    #глиномесы и строители
 
     if choice == "1":
-        take_key()
+        ()
     elif choice == "2":
-        look_out_of_window()
+        ()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
-        inspect_room()
+        GLINOMES()
 
 def popal_v_office():
     print("")
@@ -64,10 +64,14 @@ def popal_v_office():
         ()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
-        stay_in_bed()
+        popal_v_office()
 
 def prosnulsia_na_rabote():
-    print("")
+    print("Вы предпочтёте :")
+    print("1.Создавать мультимедийные,музыкальные, сценические произведения искусства")
+    print("2.Заниматься созданием предметов одежды")
+    print("3.Снабжать заводы и города энергией")
+    print("4.Создавать транспортные средства")
 
     choice = input("Введите номер выбора: ")
 
@@ -75,19 +79,28 @@ def prosnulsia_na_rabote():
         ()
     elif choice == "2":
         ()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
+    elif choice == "3":
         ()
-
-def ():
-    print("Вы подходите к окну и заглядываете вниз.")
-
-    choice = input("Введите номер выбора: ")
-
-    if choice == "1":
-        ()
-    elif choice == "2":
+    elif choice == "4":
         ()
     else:
         print("Некорректный выбор. Попробуйте еще раз.")
-        ()
+        prosnulsia_na_rabote()
+
+        # stick_stick_man += 1
+        # Promishlennost += 1
+        # Energetic += 1
+        # Build_Transport += 1
+
+# def ():
+#     print("Вы подходите к окну и заглядываете вниз.")
+#
+#     choice = input("Введите номер выбора: ")
+#
+#     if choice == "1":
+#         ()
+#     elif choice == "2":
+#         ()
+#     else:
+#         print("Некорректный выбор. Попробуйте еще раз.")
+#         ()
