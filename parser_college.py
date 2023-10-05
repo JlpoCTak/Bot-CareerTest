@@ -1,7 +1,8 @@
 import functools
-
+import time
 from config import *
 import mechanicalsoup
+import asyncio
 #2rom pysondb import db
 
 def connection_page_specs():
@@ -10,11 +11,7 @@ def connection_page_specs():
     page = browser.page
     return page
 
-def connection_page_cities():
-    browser = mechanicalsoup.StatefulBrowser()
-    browser.open(url_cities)
-    page = browser.page
-    return page
+
 
 def connection_page_colleges_in_cities():
     browser = mechanicalsoup.StatefulBrowser()
@@ -46,18 +43,17 @@ def write_data_in_file(page):
                         for text_kod in kod:
                             file.write(f'--  {text_kod.getText()} - {text_name.getText()} \n')
 
-
+def connection_page_cities():
+    browser = mechanicalsoup.StatefulBrowser()
+    browser.open(url_cities)
+    page = browser.page
+    return page
 def find_cities(page_city):
     browser = mechanicalsoup.StatefulBrowser()
     browser.open(f'{url_without_specs}/1/24')
     page = browser.page
 
     colleges_names = page.find_all('p', 'unit-name')
-
-    i=0
-
-
-
 
     sections = page_city.find_all('div', 'col l9 s12')
     with open('database/cities.txt', 'w', encoding='utf-8') as file:
@@ -88,7 +84,7 @@ def find_cities(page_city):
                             page = browser.page
                             # print(f'\t{c}:')
                             colleges_names = page.find_all('p', 'unit-name')
-
+                            time.sleep(1)
                             for href_college_unit in colleges_names:
                                     content_college = href_college_unit.find('a')
 
@@ -126,6 +122,7 @@ def find_cities(page_city):
                                                             # print()
                                                             file.write(f'\n')
                                                         j+=1
+                            browser.close()
 
 
 
