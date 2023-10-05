@@ -1,17 +1,12 @@
 import asyncio
 import logging
-import os
-
-from dotenv import load_dotenv
-load_dotenv()
-TOKEN = os.environ['TOKEN']
-
-
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from config import TOKEN
+from handlers import router
 
 async def main():
     bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
@@ -20,22 +15,7 @@ async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
 
-if __name__ == "__name__":
+
+if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
-
-from aiogram import types, F, Router
-from aiogram.types import Message
-from aiogram.filters import Command
-
-router = Router()
-
-@router.message(Command("start"))
-async def start_handler(msg: Message):
-    await msg.answer("Привет! Я помогу тебе подобрать специальность, которая будет соответствовать твоим интересам, просто остваь мне любое сообщение")
-
-@router.message()
-async def message_handler(msg: Message):
-    await msg.answer("Специально для тебя, я подготовил профориентационный тест, оствь мне сообщение, чтобы продолжить")
-
-
