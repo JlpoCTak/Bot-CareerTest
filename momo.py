@@ -19,7 +19,6 @@ def viberi_ulicu_pls():                     #попытка отсечь как 
         GLINOMES += 1
         Builder += 1
         GLINOMESi()
-
     elif choice == "2":                         #обиженных закрыли в комнате
         informationalTechnology+=1
         Energetic+=1
@@ -27,17 +26,12 @@ def viberi_ulicu_pls():                     #попытка отсечь как 
         Med_science += 1
         Builder += 1
         popal_v_office()
-
     elif choice == "3":                          #мама сказал у тебя круто получилось нарисовать палочку
          stick_stick_man += 1
          Promishlennost += 1
          Energetic += 1
          Build_Transport +=1
          prosnulsia_na_rabote()
-
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        viberi_ulicu_pls()
 
 def GLINOMESi():
     print("Вы бы хотели изучать")
@@ -47,13 +41,10 @@ def GLINOMESi():
 
     if choice == "1":
         GLINOMES += 1
-        Gorlovka_bibrala_tebia()                     #земные науки
+        Gorlovka_vibrala_tebia()                     #земные науки
     elif choice == "2":
         Builder += 1
         YouAreWalterWhite()                           #хим науки
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        GLINOMESi()
 
 def Gorlovka_vibrala_tebia():
     print("вы предпочтёте ")
@@ -64,27 +55,52 @@ def Gorlovka_vibrala_tebia():
         geology()
     elif choice == "2":
         hoz()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        Gorlovka_vibrala_tebia()
 
-                                        #       Архитектура,
                                         #       Прикладная геология, горное дело, нефтегазовое дело и геодезия,
                                         #       Сельское, лесное и рыбное хозяйство,
 
+def geology():
+    print("вы предпочтете:")
+    print("1.Составлять карты морей и суши, изучать движения, распеределение воды в природе")
+    print("2.Изучать погодные явления на Земле, состав воздуха и составлять прогнозы погоды")
+    choice = input("Введите номер ответа: ")
+
+    if choice == "1":
+        kartograf()
+    elif choice == "2":
+        meteorolog()
+
+def hoz():
+    print("вы предпочтёте:")
+    print("1.Проводить время в поле")
+    print("2.Проводить время в лесу")
+    print("3.Проводить вреия в море")
+    choice = input("Введите номер ответа: ")
+
+    if choice == "1":
+        field()
+    elif choice == "2":
+        forest()
+    elif choice == "3":
+        ocean()
+
 def YouAreWalterWhite():
     print("вы предпочтёте:")
-    print("1.проектировать и подготавливать строй-материалы для зданий")
-    print("2.отслеживать взаимосвязь предприятий и безопасность природообустройства")
+    print("1.Проектировать здания")
+    print("2.Управлять химическими технологиями")
+    print("3.Производить пищевую продукцию")
+    print("4.защищать и предотвращать  от ЧС человека и природу")
     choice = input("Введите номер ответа: ")
     if choice == "1":
         arhitec()
     elif choice == "2":
-        druid()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        YouAreWalterWhite()
+        chem_tech()
+    elif choice == "3":
+        povar()
+    elif choice == "4":
+        fireman()
 
+# архитектура
 # 11)Химические технологии
 #     12)Промышленная экология и биотехнологии
 #     13)Техносферная безопасность и природообустройство
@@ -92,7 +108,7 @@ def YouAreWalterWhite():
 def popal_v_office():
     print("вы бы предпочли:")
     print("1.заниматься бумажной работой")
-    print("2.Отслеживать изменения химических элементов, следить за качеством строй-хмических материалов")
+    print("2.Отслеживать изменения химических элементов, следить за качеством строй-химических материалов")
 
     choice = input("Введите номер ответа: ")
 
@@ -106,11 +122,19 @@ def popal_v_office():
         Med_science += 1
         Builder += 1
         Energetic += 1
-
         YouAreRealWalterWhite()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        popal_v_office()
+
+def popal_v_office():
+    print("вы бы предпочли:")
+    print("1.")
+     print("2.")
+
+     choice = input("Введите номер ответа: ")
+
+    if choice == "1":
+        ()
+    elif choice == "2":
+        ()
 
         # informationalTechnology += 1
         # Energetic += 1
@@ -135,9 +159,6 @@ def prosnulsia_na_rabote():
         Energetic()
     elif choice == "4":
         Build_Transport()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        prosnulsia_na_rabote()
 
 def stick_stick_man():
     print("вас интересует история искусств или вы хотите создавать свои произведения искусств:")
@@ -147,14 +168,13 @@ def stick_stick_man():
     choice = input("Введите номер ответа: ")
 
     if choice == "1":
-        histiry()
+        history()
     elif choice == "2":
-        multimedia()
+        media()
     elif choice == "3":
         music()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        stick_stick_man()
+    elif chjice == "4":
+        picture()
 
 #     36)Искусствознание
 #     37)Культуроведение и социокультурные проекты
@@ -173,9 +193,6 @@ def Promishlennost():
         tech_mater()
     elif choice == "2":
         easy_prom()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        Promishlennost()
 
     # 15)Технологии
     # материалов
@@ -184,42 +201,42 @@ def Promishlennost():
     # промышленности
 
 def Energetic():
-    print("")
-
+    print("вы предпочтёте заниматься:")
+    print("1.Изучать ядерную энергетику и тхнологии")
+    print("2.Изучать электро и теплоэнергетику")
     choice = input("Введите номер ответа: ")
 
     if choice == "1":
         electro()
     elif choice == "2":
         nuclear()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        Energetic()
 
 def Build_Transport():
     print("вы предпочтете: ")
-    print("1.изучать технологии создания,ремонта и сервиса наземного, водного и летательного транспорта")
-    print("2.эксплуатировать ракетно-комический транспорт")
-
+    print("1.Изучать Технику, технологии наземного транспорта и машиностроения")
+    print("2.Изучать авиационную ракетно-космическую технику")
+    print("3.Изучать аэронавигацию и эксплуатацию авиационной и ракетно-космической техники")
+    print("4.Изучать Технику и технологии кораблестроения и водного транспорта")
     choice = input("Введите номер ответа: ")
 
     if choice == "1":
-        creater()
+        ()
     elif choice == "2":
+        avio()
+    elif choice == "3":
         pilot()
-    else:
-        print("Некорректный выбор. Попробуйте еще раз.")
-        Build_Transport()
+    elif choice == "4":
+        ship()
 
-#def ():
-    # print("")
-    #
-    # choice = input("Введите номер ответа: ")
-    #
-    # if choice == "1":
-    #     ()
-    # elif choice == "2":
-    #     ()
-    # else:
-    #     print("Некорректный выбор. Попробуйте еще раз.")
-    #     ()
+# def ():
+#     print("")
+#
+#     choice = input("Введите номер ответа: ")
+#
+#     if choice == "1":
+#         ()
+#     elif choice == "2":
+#         ()
+#     else:
+#         print("Некорректный выбор. Попробуйте еще раз.")
+#         ()
