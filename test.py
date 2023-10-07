@@ -1,21 +1,12 @@
-import asyncio
+import mechanicalsoup
 
-async def give_vert():
-    await asyncio
-    print(1)
-    return '|'
 
-async def gorizont():
-    print('-',end='')
-    await asyncio.sleep(2)
 
-async def vertical(sym):
-    print(sym)
-    await asyncio.sleep(1)
+open_college_page = mechanicalsoup.StatefulBrowser()
+open_college_page.open(f'https://college.edunetwork.ru/34/8/')
+college_page = open_college_page.page
+college_name_content = college_page.find_all('div', 'card-content')
+# open_college_page.close()
+print(open_college_page.session)
 
-async def main():
-    while True:
-        await asyncio.gather(gorizont(),vertical(give_vert()))
 
-if __name__=='__main__':
-    asyncio.run(main())

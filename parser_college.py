@@ -2,8 +2,8 @@ import functools
 import time
 from config import *
 import mechanicalsoup
-import asyncio
-#2rom pysondb import db
+
+
 
 def connection_page_specs():
     browser = mechanicalsoup.StatefulBrowser()
@@ -19,6 +19,7 @@ def connection_page_colleges_in_cities():
     page = browser.page
     return page
 def write_data_in_file(page):
+
     specs = page.find_all('ul', id = 'specs')
     for spec in specs:
         s = spec.find_all('li')
@@ -49,33 +50,36 @@ def connection_page_cities():
     page = browser.page
     return page
 def find_cities(page_city):
-    browser = mechanicalsoup.StatefulBrowser()
-    browser.open(f'{url_without_specs}/1/24')
-    page = browser.page
 
-    colleges_names = page.find_all('p', 'unit-name')
+    # browser = mechanicalsoup.StatefulBrowser()
+    # browser.open(f'{url_without_specs}/1/24')
+    # page = browser.page
+    #
+    # colleges_names = page.find_all('p', 'unit-name')
 
     sections = page_city.find_all('div', 'col l9 s12')
     with open('database/cities.txt', 'w', encoding='utf-8') as file:
         i=1
         for section in sections:
             sect = section.find_all('section')
+
             for s in sect:
                 republics = s.find_all('b')
                 section_cities = s.find_all('ul')
                 # print(section_cities)
-
+                time.sleep(1)
                 for republic in republics:
+
                     r = republic.getText()
                     # print(f'{i}){r}:')
                     file.write(f'{i}){r}:\n')
                     i+=1
                     for cities in section_cities:
                         city = cities.find_all('a')
-
+                        time.sleep(1)
                         for ci in city:
                             c = ci.getText()
-
+                            time.sleep(2)
                             city_url = ci.get('href')
                             file.write(f'\t {c}:  \n')
 
@@ -84,17 +88,20 @@ def find_cities(page_city):
                             page = browser.page
                             # print(f'\t{c}:')
                             colleges_names = page.find_all('p', 'unit-name')
-                            time.sleep(1)
+
                             for href_college_unit in colleges_names:
                                     content_college = href_college_unit.find('a')
 
                                     href_college = content_college.get('href')
-
+                                    time.sleep(2)
                                     open_college_page = mechanicalsoup.StatefulBrowser()
                                     open_college_page.open(f'{url_without_specs}{href_college}')
                                     college_page = open_college_page.page
                                     college_name_content = college_page.find_all('div', 'card-content')
+
+
                                     for college_name_tag in college_name_content:
+                                        time.sleep(0.5)
                                         if college_name_tag.find('h1') is not None:
                                             college_name = college_name_tag.find('h1').getText()
                                             # print(f'\t\t{college_name}:')
@@ -122,7 +129,15 @@ def find_cities(page_city):
                                                             # print()
                                                             file.write(f'\n')
                                                         j+=1
+                                    time.sleep(1)
+                                    open_college_page.close()
+                            time.sleep(1)
                             browser.close()
+
+
+
+
+
 
 
 
