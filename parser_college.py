@@ -1,4 +1,4 @@
-import functools
+
 import time
 from config import *
 import mechanicalsoup
@@ -49,16 +49,13 @@ def connection_page_cities():
     browser.open(url_cities)
     page = browser.page
     return page
+
+
+
 def find_cities(page_city):
 
-    # browser = mechanicalsoup.StatefulBrowser()
-    # browser.open(f'{url_without_specs}/1/24')
-    # page = browser.page
-    #
-    # colleges_names = page.find_all('p', 'unit-name')
-
     sections = page_city.find_all('div', 'col l9 s12')
-    with open('database/cities.txt', 'w', encoding='utf-8') as file:
+    with open('database/cities_backup.txt', 'w', encoding='utf-8') as file:
         i=1
         for section in sections:
             sect = section.find_all('section')
@@ -137,24 +134,8 @@ def find_cities(page_city):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def main():
+
     find_cities(connection_page_cities())
     # write_data_in_file(connection_page_specs())
 
