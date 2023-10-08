@@ -21,10 +21,14 @@ def find_cities(page_city):
     sections = page_city.find_all('div', 'col l9 s12')
     with open('database/db.json', 'w', encoding='utf-8') as file:
         i = 1
+        
+
+        # json.dump({},file,ensure_ascii=False,indent=4)
         for section in sections:
             sect = section.find_all('section')
-            dict_repub = {}
+
             for s in sect:
+                dict_repub = {}
                 republics = s.find_all('b')
                 section_cities = s.find_all('ul')
                 # print(section_cities)
@@ -69,6 +73,13 @@ def find_cities(page_city):
                                         # print(f'\t\t{college_name}:')
                                         #file.write(f'\t\t{college_name}:\n')
                                         college_spec_tag = college_page.find('section', id='lic_okso')
+                                        college_s_href = college_page.find('div', 'row contacts')
+                                        if college_s_href is not None:
+
+                                            college_site_href = college_s_href.find('a', target='_blank')
+                                            if college_s_href.find('a', target='_blank') is not None:
+                                                college_sit_href = college_site_href.get('href')
+                                                dict_spec['href'] = f'{college_sit_href}'
 
                                         if college_spec_tag is not None:
                                             # print(college_spec_tag.find_all('tr'))
@@ -87,15 +98,17 @@ def find_cities(page_city):
                                                             spec_name = string_id.getText()
                                                             # print(f'{spec_name} ', end='')
                                                             #file.write(f'{spec_name} ')
-                                                        # else:
-                                                        #     # print()
-                                                        #     file.write(f'\n')
-                                                        # j+=1
+                                                        else:
+                                                            pass
+                                                            # print()
+                                                            #file.write(f'\n')
+                                                        j+=1
                                                         dict_spec[f'{spec_id}'] = f'{spec_name}'
                                 dict_college[f'{college_name}'] = dict_spec
                             dict_city[f'{c}'] = dict_college
+                        dict_repub[f'{r}'] = dict_city
 
-                        json.dump(dict_city, file, ensure_ascii=False, indent=4)
+                json.dump(dict_repub, file, ensure_ascii=False, indent=4)
 
                 time.sleep(1)
                 open_college_page.close()

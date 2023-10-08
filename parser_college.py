@@ -55,7 +55,7 @@ def connection_page_cities():
 def find_cities(page_city):
 
     sections = page_city.find_all('div', 'col l9 s12')
-    with open('database/cities_backup.txt', 'w', encoding='utf-8') as file:
+    with open('database/cities.txt', 'w', encoding='utf-8') as file:
         i=1
         for section in sections:
             sect = section.find_all('section')
