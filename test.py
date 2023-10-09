@@ -21,7 +21,7 @@ def find_cities(page_city):
     sections = page_city.find_all('div', 'col l9 s12')
     with open('database/db.json', 'w', encoding='utf-8') as file:
         i = 1
-        
+        all_dict = {}
 
         # json.dump({},file,ensure_ascii=False,indent=4)
         for section in sections:
@@ -108,14 +108,15 @@ def find_cities(page_city):
                             dict_city[f'{c}'] = dict_college
                         dict_repub[f'{r}'] = dict_city
 
-                json.dump(dict_repub, file, ensure_ascii=False, indent=4)
 
-                time.sleep(1.5)
+
+                time.sleep(2)
                 open_college_page.close()
 
-            time.sleep(1.5)
+            time.sleep(2)
             browser.close()
-
+        all_dict['Republics'] = dict_repub
+        json.dump(all_dict, file, ensure_ascii=False, indent=4)
 
 def main():
     find_cities(connection_page_cities())
