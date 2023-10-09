@@ -66,8 +66,9 @@ def find_cities(page_city):
                                 college_page = open_college_page.page
                                 college_name_content = college_page.find_all('div', 'card-content')
                                 dict_spec = {}
+                                time.sleep(1)
                                 for college_name_tag in college_name_content:
-                                    time.sleep(1)
+                                    time.sleep(1.5)
                                     if college_name_tag.find('h1') is not None:
                                         college_name = college_name_tag.find('h1').getText()
                                         # print(f'\t\t{college_name}:')
@@ -107,7 +108,7 @@ def find_cities(page_city):
                                 dict_college[f'{college_name}'] = dict_spec
                             dict_city[f'{c}'] = dict_college
                         dict_repub[f'{r}'] = dict_city
-
+                        json.dump(dict_repub, file, ensure_ascii=False, indent=4)
 
 
                 time.sleep(2)
@@ -115,8 +116,8 @@ def find_cities(page_city):
 
             time.sleep(2)
             browser.close()
-        all_dict['Republics'] = dict_repub
-        json.dump(all_dict, file, ensure_ascii=False, indent=4)
+
+
 
 def main():
     find_cities(connection_page_cities())
