@@ -24,25 +24,25 @@ def write_data_in_file(page):
     for spec in specs:
         s = spec.find_all('li')
         j=0
-        test = (s[1].find('a').get('href'))
-        print(test)
-        print(f'{url_without_specs}{test}')
+        # test = (s[1].find('a').get('href'))
+        # print(test)
+        # print(f'{url_without_specs}{test}')
 
-        with open('/database/specs.txt', 'w', encoding='utf-8') as file:
+        with open('database/specs.txt', 'w', encoding='utf-8') as file:
             for i in range(620):
                 kod = (s[i].find_all('span'))
                 name = (s[i].find_all('a'))
-
+                time.sleep(0.1)
                 if s[i].find_all('span')==[]:
 
-                    file.write(f'{j+1}) {s[i].getText()} \n')
+                    #file.write(f'{j+1}) {s[i].getText()} \n')
                     j+=1
                 else:
 
                     for text_name in name:
 
                         for text_kod in kod:
-                            file.write(f'--  {text_kod.getText()} - {text_name.getText()} \n')
+                            file.write(f'{text_kod.getText()}:{text_name.getText()}\n')
 
 def connection_page_cities():
     browser = mechanicalsoup.StatefulBrowser()
@@ -136,8 +136,8 @@ def find_cities(page_city):
 
 def main():
 
-    find_cities(connection_page_cities())
-    # write_data_in_file(connection_page_specs())
+    # find_cities(connection_page_cities())
+    write_data_in_file(connection_page_specs())
 
 
 if __name__ == '__main__':
