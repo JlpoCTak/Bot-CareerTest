@@ -131,13 +131,17 @@ def find_cities(page_city):
                             time.sleep(1)
                             browser.close()
 
-
+def write_republics(page):
+    with open('database/republics.txt', 'w',encoding='utf-8') as file:
+        tags = page.find_all('p')
+        for text in tags:
+            file.write(f'{text.getText()}\n')
 
 
 def main():
-
+    write_republics(connection_page_cities())
     # find_cities(connection_page_cities())
-    write_data_in_file(connection_page_specs())
+    #write_data_in_file(connection_page_specs())
 
 
 if __name__ == '__main__':

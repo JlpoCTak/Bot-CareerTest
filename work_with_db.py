@@ -10,13 +10,9 @@ dict_rep = [
 
 def find_college():
     with open('database/db.json','r',encoding='utf-8') as file:
-        with open('database/test.txt','w',encoding='utf-8') as text_w:
-            for db in file:
-                # db_db1 = file.load(file)
-                # time.sleep(0.01)
-                text_w.write(db)
-                print(db)
-                break
+        cities = ijson.items(file,dict_rep[0])
+        print(list(cities))
+
 def main():
     find_college()
 
