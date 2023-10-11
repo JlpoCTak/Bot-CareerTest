@@ -3,6 +3,8 @@ import json
 import time
 from config import *
 import work_with_db
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 # {
 #     city:{
 #         college1:[{'id_kval': 'name_kval'},{'id_kval': 'name_kval'},{'id_kval': 'name_kval'}]
@@ -124,8 +126,11 @@ def test():
 
     print(rep[-5:])
 
+
+
 def main():
-    print(work_with_db.find_college('05.02.03'))
+    search_city()
+    # print(work_with_db.find_college('05.02.03'))
     # test()
     # find_cities(connection_page_cities())
     # write_data_in_file(connection_page_specs())

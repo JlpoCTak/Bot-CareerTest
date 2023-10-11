@@ -1,5 +1,6 @@
 import ijson
-
+from fuzzywuzzy import process
+# import Levenshtein
 def find_college(id_spec):
     list_of_href = []
     with open('database/db.json', 'r', encoding='utf-8') as file:
@@ -34,3 +35,12 @@ def find_college(id_spec):
     return list_of_href
 
 # print(find_college('43.02.03'))
+
+def search_city():
+    with open('database/cities.txt','r',encoding='utf-8') as file:
+        cities = []
+        for i in range(1423):
+            a = file.readline()
+            cities.append(a[:-1])
+        find = process.extractOne('',cities)
+        return find[0]
