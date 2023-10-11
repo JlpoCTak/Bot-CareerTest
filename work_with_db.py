@@ -1,76 +1,36 @@
-import json
-import time
-
 import ijson
 
+def find_college(id_spec):
+    list_of_href = []
+    with open('database/db.json', 'r', encoding='utf-8') as file:
+            republic = ijson.parse(file)
+            college = '123'
+            pref_href = '0'
+            pref_id = '1'
 
+            for prefix,event,value in republic:
 
-def find_college():
-    with open('database/republics.txt', 'r', encoding='utf-8') as rep:
-<<<<<<< HEAD
-        with open('database/db_backup.json', 'r', encoding='utf-8') as file:
-            parser = ijson.parse(file)
+                # if event=='map_key' and prefix=='':
+                #     repub = value #название областей
+                strin = prefix,event,value
+                # print(strin)
+                if "href" in prefix:
+                    pref_href = strin[0]
+                    # print(pref_href)
+                if value==id_spec:
+                    pref_id = strin[0]
+                    # print(pref_id, '++++++++++')
 
-            # Ищем начало объекта области
-            for prefix, event, value in parser:
-                if event == 'start_map':
-                    republic = prefix
-                    print("Область:", republic)
+                if pref_id in pref_href:
+                    if 'href' in strin:
+                        college = strin[0]
+                        # print(pref_href)
+                        # print(pref_id)
+                if college in prefix:
+                    if prefix[-5:]=='.href':
+                        # print(f'{strin[0][0:-5]}:{strin[-1]}')
+                        final = f'{strin[0][0:-5]}:{strin[-1]}'
+                        list_of_href.append(final)
+    return list_of_href
 
-                    # Внутри области ищем города
-                    for prefix, event, value in parser:
-                        if event == 'start_map':
-                            city = prefix
-                            print("Город:", city)
-
-                            # Внутри города ищем специальности
-                            for prefix, event, value in parser:
-                                if event == 'start_map':
-                                    specialty = prefix
-                                    print("Специальность:", specialty)
-
-                                    # Внутри специальности ищем информацию
-                                    for prefix, event, value in parser:
-                                        if event == 'string':
-                                            if prefix.endswith('.href'):
-                                                href = value
-                                                print("Ссылка:", href)
-                                            else:
-                                                code = prefix.split('.')[-1]
-                                                print("Код специальности:", code)
-                                                print("Описание:", value)
-
-                                            # Здесь вы можете добавить свой код для обработки данных о специальности
-
-                                        # Проверяем, закончили ли мы специальность
-                                        elif event == 'end_map':
-                                            break
-
-                                # Проверяем, закончили ли мы город
-                                elif event == 'end_map':
-                                    break
-
-                        # Проверяем, закончили ли мы область
-                        elif event == 'end_map':
-                            break
-=======
-        with open('database/db.json', 'r', encoding='utf-8') as file:
-            # for i in range(83):
-                # republi = rep.readline().strip()  # считываем файл с областями
-
-                # print(republic)
-                republic = ijson.parse(file)
-                for prefix,event,value in republic:
-                    # if event=='map_key' and prefix=='':
-                    #     repub = value #название областей
-                    # print(prefix,event,value)
-                    # if event=='map_key' and value!='':
-                    #     print(prefix,event,value)
-                    print(prefix)
->>>>>>> 6359c26bc73b935040e67c259737e1e5a6932441
-
-def main():
-    find_college()
-
-if __name__=='__main__':
-    main()
+# print(find_college('43.02.03'))

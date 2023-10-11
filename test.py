@@ -2,6 +2,7 @@ import mechanicalsoup
 import json
 import time
 from config import *
+import work_with_db
 # {
 #     city:{
 #         college1:[{'id_kval': 'name_kval'},{'id_kval': 'name_kval'},{'id_kval': 'name_kval'}]
@@ -9,6 +10,7 @@ from config import *
 #         college3:{'id_kval': 'name_kval'}
 #     }
 # }
+
 
 def connection_page_cities():
     browser = mechanicalsoup.StatefulBrowser()
@@ -19,7 +21,7 @@ def connection_page_cities():
 
 def find_cities(page_city):
     sections = page_city.find_all('div', 'col l9 s12')
-    with open('database/db.json', 'w', encoding='utf-8') as file:
+    with open('database/db1.json', 'w', encoding='utf-8') as file:
         i = 1
         all_dict = {}
 
@@ -117,10 +119,15 @@ def find_cities(page_city):
             time.sleep(2)
             browser.close()
 
+def test():
+    rep = '123456879'
 
+    print(rep[-5:])
 
 def main():
-    find_cities(connection_page_cities())
+    print(work_with_db.find_college('05.02.03'))
+    # test()
+    # find_cities(connection_page_cities())
     # write_data_in_file(connection_page_specs())
 
 
