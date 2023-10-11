@@ -9,22 +9,26 @@ def find_college():
     with open('database/republics.txt', 'r', encoding='utf-8') as rep:
         with open('database/db.json', 'r', encoding='utf-8') as file:
             # for i in range(83):
-            for line in rep:
-                republic = line.strip()  # считываем файл с областями
-                i=0
-                print(republic)
-                repubs = ijson.kvitems(file, f'{republic}')  # получаем значение области ключа
-                # print(list(repubs))
-                for repu in list(repubs):
+                # republic = rep.readline().strip()  # считываем файл с областями
+
+                # print(republic)
+                republic = ijson.parse(file)
+                for prefix,event,value in republic:
+                    if event=='map_key':
+                        print(prefix, event, value)
+
+                        repubs = ijson.kvitems(file, f'{value}.items')  # получаем значение области ключа
+                        print(list(repubs))
+                # for repu in repubs:
                     # print(list(repu[1]))
-
-                    cities = list(repu[1]) #списки городов по областям
-                    # print(list(cities))
-
-                    for city in list(cities):
-                        # print(city)
-                        break
-                        specs = ijson.items(file, f'{repu[0]}')
+                #
+                #     cities = list(repu[1]) #списки городов по областям
+                #     # print(list(cities))
+                #
+                #     for city in list(cities):
+                #         # print(city)
+                #         break
+                #         specs = ijson.items(file, f'{repu[0]}')
                         # print(list(specs))
                         # for spec in specs:
                         #     special = list(spec)
