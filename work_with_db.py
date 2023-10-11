@@ -7,45 +7,51 @@ import ijson
 
 def find_college():
     with open('database/republics.txt', 'r', encoding='utf-8') as rep:
-        with open('database/db.json', 'r', encoding='utf-8') as file:
-            # for i in range(83):
-            for line in rep:
-                republic = line.strip()  # считываем файл с областями
-                i=0
-                print(republic)
-                repubs = ijson.kvitems(file, f'{republic}')  # получаем значение области ключа
-                # print(list(repubs))
-                for repu in list(repubs):
-                    # print(list(repu[1]))
+        with open('database/db_backup.json', 'r', encoding='utf-8') as file:
+            parser = ijson.parse(file)
 
-                    cities = list(repu[1]) #списки городов по областям
-                    # print(list(cities))
+            # Ищем начало объекта области
+            for prefix, event, value in parser:
+                if event == 'start_map':
+                    republic = prefix
+                    print("Область:", republic)
 
-                    for city in list(cities):
-                        # print(city)
-                        break
-                        specs = ijson.items(file, f'{repu[0]}')
-                        # print(list(specs))
-                        # for spec in specs:
-                        #     special = list(spec)
-                        #     print(special)
-                # republics = list(repubs)[0].keys()  # получаем название областей и республик в списке dict_keys
-                # try:
-                #
-                #
-                #
-                #     # print(republics)
-                #     # for republic in republics:  # области поочередно
-                #     #     print(republic)
-                #         # cities = ijson.items(file, f'{republic}')
-                #         # print(cities)
-                #         # try:
-                #         #     for city in cities:
-                #         #         print(city)
-                #     pass
-                # except ijson.common.IncompleteJSONError:
-                #     print('ошибка ijson.common.IncompleteJSONError, вроде не критично')
+                    # Внутри области ищем города
+                    for prefix, event, value in parser:
+                        if event == 'start_map':
+                            city = prefix
+                            print("Город:", city)
 
+                            # Внутри города ищем специальности
+                            for prefix, event, value in parser:
+                                if event == 'start_map':
+                                    specialty = prefix
+                                    print("Специальность:", specialty)
+
+                                    # Внутри специальности ищем информацию
+                                    for prefix, event, value in parser:
+                                        if event == 'string':
+                                            if prefix.endswith('.href'):
+                                                href = value
+                                                print("Ссылка:", href)
+                                            else:
+                                                code = prefix.split('.')[-1]
+                                                print("Код специальности:", code)
+                                                print("Описание:", value)
+
+                                            # Здесь вы можете добавить свой код для обработки данных о специальности
+
+                                        # Проверяем, закончили ли мы специальность
+                                        elif event == 'end_map':
+                                            break
+
+                                # Проверяем, закончили ли мы город
+                                elif event == 'end_map':
+                                    break
+
+                        # Проверяем, закончили ли мы область
+                        elif event == 'end_map':
+                            break
 
 def main():
     find_college()
