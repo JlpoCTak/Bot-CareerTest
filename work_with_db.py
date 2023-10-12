@@ -33,16 +33,18 @@ def find_college(id_spec,city_from_user='1'):
                         # print(f'{strin[0][0:-5]}:{strin[-1]}')
                         final = f'{strin[0][0:-5]}:{strin[-1]}'
                         list_of_href.append(final)
-    for hrefs in list_of_href:
-        if city_from_user in hrefs:
-            finaly_list_of_href.append(hrefs)
-
-    if city_from_user == '1':
-        return list_of_href
-    elif city_from_user in (city for city in finaly_list_of_href):
-        return finaly_list_of_href
-    else:
-        return 'нет города'
+    # return list_of_href
+    # if city_from_user!=1:
+    #     for hrefs in list_of_href:
+    #         if city_from_user in hrefs:
+    #             finaly_list_of_href.append(hrefs)
+    #     for href in finaly_list_of_href:
+    #         if city_from_user in href:
+    #             return finaly_list_of_href
+    #         else:
+    #             return 'Вашей спеальности нет в данном городе'
+    # else:
+    #     return list_of_href
 
 
 
@@ -59,4 +61,4 @@ def search_city(city_from_user):
 
 
 # print()
-print(find_college('23.02.04',search_city('Ростов-на-дону')))
+print(find_college('31.02.01',search_city('Ростов-на-дону')))
