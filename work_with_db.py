@@ -17,34 +17,45 @@ def find_college(id_spec,city_from_user='1'):
                 strin = prefix,event,value
                 # print(strin)
                 if "href" in prefix:
-                    pref_href = strin[0]
-                    # print(pref_href)
+                    pref_href = strin[0] # название где ссылка
+                    # print(strin)
+                    href = strin[-1] # ссылка
                 if value==id_spec:
-                    pref_id = strin[0]
+                    pref_id = strin[0] #название где айди
                     # print(pref_id, '++++++++++')
+                    id_ = strin[-1] # id
 
                 if pref_id in pref_href:
                     if 'href' in strin:
                         college = strin[0]
                         # print(pref_href)
                         # print(pref_id)
-                if college in prefix:
-                    if prefix[-5:]=='.href':
+                        # print(college)
+                        # print(prefix)
+                if pref_id in pref_href:
+                    if pref_href[-5:]=='.href':
                         # print(f'{strin[0][0:-5]}:{strin[-1]}')
-                        final = f'{strin[0][0:-5]}:{strin[-1]}'
+                        # final = f'{strin[0][0:-5]}:{strin[-1]}'
+                        final = f'{pref_href}:{href}'
+
                         list_of_href.append(final)
-    # return list_of_href
-    # if city_from_user!=1:
-    #     for hrefs in list_of_href:
-    #         if city_from_user in hrefs:
-    #             finaly_list_of_href.append(hrefs)
-    #     for href in finaly_list_of_href:
-    #         if city_from_user in href:
-    #             return finaly_list_of_href
-    #         else:
-    #             return 'Вашей спеальности нет в данном городе'
-    # else:
-    #     return list_of_href
+    a = list(set(list_of_href))
+    list_of_href = a
+
+    # return len(list_of_href)
+    if city_from_user!='1':
+        for hrefs in list_of_href:
+            if city_from_user in hrefs:
+                finaly_list_of_href.append(hrefs)
+            # else:
+            #     return 'Вашей специальности нет в данном городе'
+        for href in finaly_list_of_href:
+            if city_from_user in href:
+                return finaly_list_of_href
+            else:
+                return 'Вашей спеальности нет в данном городе'
+    else:
+        return list_of_href
 
 
 
@@ -60,5 +71,5 @@ def search_city(city_from_user):
         return find[0]
 
 
-# print()
-print(find_college('31.02.01',search_city('Ростов-на-дону')))
+# for x in ints_list: if ints_list.count(x) > 1: ints_list.remove(x)
+print(find_college('08.02.02',search_city('Ростов-на-')))
