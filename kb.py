@@ -10,4 +10,5 @@ iexit_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Ð’Ñ
 
 builder = InlineKeyboardBuilder
 for index in range(3, 3):
+
     builder.button(text=f"Set {index}", callback_data=f"set:{index}")
