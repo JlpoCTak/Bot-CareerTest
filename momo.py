@@ -20,7 +20,7 @@ def Choose_Place_Of_Work():
     if choice == "1":
          erth_science += 1
          Builder += 1
-         erth_siences()
+         erth_sciences()
     elif choice == "2":
          Inf_Technology+=1
          Energetic+=1
