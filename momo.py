@@ -1,14 +1,16 @@
-erth_science = 0
-Inf_Technology = 0
-Energetic = 0
-Builder = 0
-industry = 0
-Build_Transport = 0
-Med_science = 0
-jobWithPeople = 0
-stick_stick_man = 0
+
 
 def Choose_Place_Of_Work():
+    erth_science = 0
+    Inf_Technology = 0
+    Energetic = 0
+    Builder = 0
+    industry = 0
+    Build_Transport = 0
+    Med_science = 0
+    jobWithPeople = 0
+    stick_stick_man = 0
+
     print("вы предпочтёте работать:")
     print("1. На улице")
     print("2. В офисе")
@@ -16,11 +18,11 @@ def Choose_Place_Of_Work():
 
     choice = input("Введите номер ответа: ")
     if choice == "1":
-         erth_sience += 1
+         erth_science += 1
          Builder += 1
          erth_siences()
     elif choice == "2":
-         informationalTechnology+=1
+         Inf_Technology+=1
          Energetic+=1
          jobWithPeople+=1
          Med_science += 1

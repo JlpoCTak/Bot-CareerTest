@@ -59,7 +59,6 @@ def find_college(id_spec,city_from_user='1'):
 
 
 
-# print(find_college('23.02.04'))
 
 def search_city(city_from_user):
     with open('database/cities.txt','r',encoding='utf-8') as file:
@@ -71,5 +70,4 @@ def search_city(city_from_user):
         return find[0]
 
 
-# for x in ints_list: if ints_list.count(x) > 1: ints_list.remove(x)
-print(find_college('29.01.07',search_city('Ростов-на-')))
+# print(find_college('29.01.07',search_city('Ростов-на-')))
