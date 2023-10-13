@@ -10,7 +10,3 @@ greet = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Про
 menu = InlineKeyboardMarkup(inline_keyboard=menu)
 exit_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Выйти в меню")]], resize_keyboard=True)
 eexit_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="Выйти в меню", callback_data="Меню")]])
-
-builder = InlineKeyboardBuilder
-for index in range(3, 3):
-    builder.button(text=f"Set {index}", callback_data=f"set:{index}")

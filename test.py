@@ -2,6 +2,9 @@ import mechanicalsoup
 import json
 import time
 from config import *
+import work_with_db
+
+
 # {
 #     city:{
 #         college1:[{'id_kval': 'name_kval'},{'id_kval': 'name_kval'},{'id_kval': 'name_kval'}]
@@ -9,6 +12,7 @@ from config import *
 #         college3:{'id_kval': 'name_kval'}
 #     }
 # }
+
 
 def connection_page_cities():
     browser = mechanicalsoup.StatefulBrowser()
@@ -19,9 +23,9 @@ def connection_page_cities():
 
 def find_cities(page_city):
     sections = page_city.find_all('div', 'col l9 s12')
-    with open('database/db.json', 'w', encoding='utf-8') as file:
+    with open('database/db1.json', 'w', encoding='utf-8') as file:
         i = 1
-        
+        all_dict = {}
 
         # json.dump({},file,ensure_ascii=False,indent=4)
         for section in sections:
@@ -66,8 +70,9 @@ def find_cities(page_city):
                                 college_page = open_college_page.page
                                 college_name_content = college_page.find_all('div', 'card-content')
                                 dict_spec = {}
+                                time.sleep(1)
                                 for college_name_tag in college_name_content:
-                                    time.sleep(1)
+                                    time.sleep(1.5)
                                     if college_name_tag.find('h1') is not None:
                                         college_name = college_name_tag.find('h1').getText()
                                         # print(f'\t\t{college_name}:')
@@ -107,18 +112,25 @@ def find_cities(page_city):
                                 dict_college[f'{college_name}'] = dict_spec
                             dict_city[f'{c}'] = dict_college
                         dict_repub[f'{r}'] = dict_city
+                        json.dump(dict_repub, file, ensure_ascii=False, indent=4)
 
-                json.dump(dict_repub, file, ensure_ascii=False, indent=4)
 
-                time.sleep(1.5)
+                time.sleep(2)
                 open_college_page.close()
 
-            time.sleep(1.5)
+            time.sleep(2)
             browser.close()
+
+def test():
+    for i in range(3,3):
+        print(type(i))
 
 
 def main():
-    find_cities(connection_page_cities())
+    test()
+    # print(work_with_db.search_city(city_from_user='Роств-НА'))
+    # print(work_with_db.find_college('05.02.03'))
+    # find_cities(connection_page_cities())
     # write_data_in_file(connection_page_specs())
 
 
