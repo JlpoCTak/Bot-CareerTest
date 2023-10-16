@@ -39,3 +39,12 @@ stage_arts_and_literary_arts = 0
 musical_art = 0
 fine_and_applied_arts = 0
 screen_arts = 0
+
+
+
+
+
+
+
+
+
