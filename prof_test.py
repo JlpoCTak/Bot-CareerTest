@@ -46,9 +46,13 @@ def test_holland():
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as file:
         dict_prof = {}
         f = json.load(file)
+        print()
+        i = 0
         for section, commands in f.items():
-            print(section, commands)
+            print(i+1,section, commands)
+            i+=1
+            if i%2==0:
+                print()
 
-
-# print(test_holland())
+test_holland()
 
