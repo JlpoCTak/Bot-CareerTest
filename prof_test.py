@@ -1,3 +1,5 @@
+import json
+
 earth_science = 0
 architecture = 0
 tech_and_technology_building = 0
@@ -40,11 +42,13 @@ musical_art = 0
 fine_and_applied_arts = 0
 screen_arts = 0
 
+def test_holland():
+    with open('database/professions_for_text.json', 'r', encoding='utf-8') as file:
+        dict_prof = {}
+        f = json.load(file)
+        for section, commands in f.items():
+            print(section, commands)
 
 
-
-
-
-
-
+# print(test_holland())
 
