@@ -128,8 +128,8 @@ def test():
 
 def main():
     test()
-    # print(work_with_db.search_city(city_from_user='Роств-НА'))
-    # print(work_with_db.find_college('05.02.03'))
+    print(work_with_db.find_college('05.02.03',work_with_db.search_city(city_from_user='Роств-НА-дону')))
+    # print(work_with_dЪb.find_college('05.02.03'))
     # find_cities(connection_page_cities())
     # write_data_in_file(connection_page_specs())
 
