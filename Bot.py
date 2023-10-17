@@ -29,23 +29,9 @@ for index in range(3, 3):
     builder.button(text=f"Set {index}", callback_data=f"set:{index}")
 
 
-
-@router.message(Command("/start"))
-async def bettion_1(msg: types.Message):
-    markup = InlineKeyboardMarkup()
-    button = InlineKeyboardButton(text= "Начать", callback_data="butt_id")
-    markup.add(button)
-    await msg.answer(text.greet.format(name=msg.from_user.full_name), reply_markup=kb.menu)
-
-@router.message(F.text == "Меню")
-@router.message(F.text == "Выйти в меню")
-async def menu(msg: Message):
-    await msg.answer(text.menu, reply_markup=kb.menu)
-
-
-
-
-
+@dp.message(CommandStart())
+async def command_start_handler(message: Message):
+    await message.answer((f"Привет, {hbold(message.from_user.full_name)}"))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
