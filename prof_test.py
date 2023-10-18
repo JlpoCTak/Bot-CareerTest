@@ -43,16 +43,25 @@ import json
 # screen_arts = 0
 
 def test_holland():
-    with open('database/professions_for_text.json', 'r', encoding='utf-8') as file:
-        dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0, 'artistic': 0}
-        f = json.load(file)
+    with open('database/professions_for_text.json', 'r', encoding='utf-8') as profissions_text:
+        with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
+            dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0, 'artistic': 0}
+            professions = json.load(profissions_text)
+            hol_table = json.load(holland_table)
+            for i in range(5):
+                answer = f'{i+1}'+input()
+                for a in hol_table:
+                    if answer in hol_table[a]:
+                        dict_prof[a]+=1
+            print(max(dict_prof))
+            print(dict_prof)
 
-        i = 0
-        for section, commands in f.items():
-            print(i+1, section, commands)
-            i+=1
-            if i%2==0:
-                print()
+
+            # for section, commands in proffesions.items():
+            #     print(i+1, section, commands)
+            #     i+=1
+            #     if i%2==0:
+            #         print()
 
 test_holland()
 
