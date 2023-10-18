@@ -1,5 +1,9 @@
 import json
-import aiogram
+from aiogram import types, F, Router
+from aiogram.types import Message
+from aiogram.filters import Command, CommandStart
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.markdown import hbold
 
 # earth_science = 0
 # architecture = 0
@@ -50,14 +54,20 @@ def test_holland():
             max_ball_group = []
             professions = json.load(profissions_text)
             hol_table = json.load(holland_table)
-            for i in range(5):
-                answer = f'{i+1}'+input()
-                for a in hol_table:
-                    if answer in hol_table[a]:
-                        dict_prof[a]+=1
-            for k, values in dict_prof.items():
-                if values == max(dict_prof.values()):
-                    max_ball_group.append(k)
+            # print(list(professions.keys()))
+            # print(len(list(professions.keys())))
+            list_prof = list(professions.keys())
+            for i in range(43):
+                print(professions[f'{list_prof[i*2-1]}'])
+                print(professions[f'{list_prof[i*2]}'])
+                print()
+            #     answer = f'{i}'+input()
+            #     for a in hol_table:
+            #         if answer in hol_table[a]:
+            #             dict_prof[a]+=1
+            # for k, values in dict_prof.items():
+            #     if values == max(dict_prof.values()):
+            #         max_ball_group.append(k)
 
 
 
@@ -66,7 +76,9 @@ def test_holland():
             print(max_ball_group)
             print(dict_prof)
 
-
+def test():
+    for i in range(1,45):
+        print(i)
             # for section, commands in proffesions.items():
             #     print(i+1, section, commands)
             #     i+=1
