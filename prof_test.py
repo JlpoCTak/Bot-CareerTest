@@ -1,4 +1,5 @@
 import json
+import aiogram
 
 # earth_science = 0
 # architecture = 0
@@ -46,6 +47,7 @@ def test_holland():
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as profissions_text:
         with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
             dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0, 'artistic': 0}
+            max_ball_group = []
             professions = json.load(profissions_text)
             hol_table = json.load(holland_table)
             for i in range(5):
@@ -53,7 +55,15 @@ def test_holland():
                 for a in hol_table:
                     if answer in hol_table[a]:
                         dict_prof[a]+=1
-            print(max(dict_prof))
+            for k, values in dict_prof.items():
+                if values == max(dict_prof.values()):
+                    max_ball_group.append(k)
+
+
+
+
+
+            print(max_ball_group)
             print(dict_prof)
 
 
