@@ -57,17 +57,19 @@ def test_holland():
             # print(list(professions.keys()))
             # print(len(list(professions.keys())))
             list_prof = list(professions.keys())
-            for i in range(43):
-                print(professions[f'{list_prof[i*2-1]}'])
-                print(professions[f'{list_prof[i*2]}'])
-                print()
-            #     answer = f'{i}'+input()
-            #     for a in hol_table:
-            #         if answer in hol_table[a]:
-            #             dict_prof[a]+=1
-            # for k, values in dict_prof.items():
-            #     if values == max(dict_prof.values()):
-            #         max_ball_group.append(k)
+            for i in range(42):
+                # print(professions[f'{list_prof[i*2]}'])
+                # print(professions[f'{list_prof[i*2+1]}'])
+                # print()
+                print(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}"
+                         f"\n2){list_prof[i*2+1]} - {professions[f'{list_prof[i*2+1]}']}")
+                answer = f'{i}'+input()
+                for a in hol_table:
+                    if answer in hol_table[a]:
+                        dict_prof[a]+=1
+            for k, values in dict_prof.items():
+                if values == max(dict_prof.values()):
+                    max_ball_group.append(k)
 
 
 

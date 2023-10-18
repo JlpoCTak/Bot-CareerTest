@@ -31,14 +31,15 @@ async def Test(msg: Message):
             professions = json.load(profissions_text)
             hol_table = json.load(holland_table)
             list_prof = list(professions.keys())
-            for i in range(1,43):
+            for i in range(42):
                 builder = InlineKeyboardBuilder()
                 builder.add(types.InlineKeyboardButton(
-                    text="Пройти тест",
+                    text=f"{list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}"
+                         f" \n{list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}",
                     callback_data="Test")
                 )
                 await msg.answer(
-                    f'',
+                    f'Првиет, {msg.from_user.full_name}, я профориентационный бот, который поможет тебе с определением твоей будушей специальности',
                     reply_markup=builder.as_markup()
                     )
                 answer = f'{i + 1}' + input()
