@@ -10,6 +10,7 @@ import text
 from prof_test import test_holland
 router = Router()
 
+
 @router.message(Command("start"))
 async def start_handler(msg: Message):
     builder = InlineKeyboardBuilder()
@@ -34,12 +35,14 @@ async def Test(msg: Message):
             for i in range(42):
                 builder = InlineKeyboardBuilder()
                 builder.add(types.InlineKeyboardButton(
-                    text=f"{list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}"
-                         f" \n{list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}",
-                    callback_data="Test")
+                    text=f"{list_prof*2}",
+
+                    callback_data="answer_a")
                 )
+                types.InlineKeyboardButton(text=f"{list_prof*2+1}",callback_data='answer_b')
                 await msg.answer(
-                    f'Првиет, {msg.from_user.full_name}, я профориентационный бот, который поможет тебе с определением твоей будушей специальности',
+                    f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}"
+                         f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}",
                     reply_markup=builder.as_markup()
                     )
                 answer = f'{i + 1}' + input()
@@ -49,3 +52,6 @@ async def Test(msg: Message):
             for k, values in dict_prof.items():
                 if values == max(dict_prof.values()):
                     max_ball_group.append(k)
+
+
+
