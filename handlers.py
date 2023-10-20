@@ -2,6 +2,7 @@ from aiogram import types, F, Router
 from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+import aiogram.filters.callback_data as filters
 from aiogram.utils.markdown import hbold
 import json
 
@@ -45,7 +46,8 @@ async def Test(msg: Message):
                          f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}",
                     reply_markup=builder.as_markup()
                     )
-                answer = f'{i + 1}' + input()
+                print(InlineKeyboardButton.callback_data)
+                answer = f'{i + 1}' + InlineKeyboardButton.callback_data
                 for a in hol_table:
                     if answer in hol_table[a]:
                         dict_prof[a] += 1
