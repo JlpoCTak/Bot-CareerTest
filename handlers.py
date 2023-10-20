@@ -6,6 +6,7 @@ from aiogram.filters import Command, CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import aiogram.filters.callback_data as filters
 from aiogram.utils.markdown import hbold
+from aiogram.filters.state import State,StatesGroup
 import json
 
 from kb import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
@@ -52,7 +53,7 @@ async def Test(callback: types.CallbackQuery):
                 )
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
                                               f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard)
-
+                await state.set_state()
                 # print(F.callback_data)
                 # print(InlineKeyboardButton.callback_data)
             #     answer = f'{i + 1}'# + InlineKeyboardButton.callback_data
