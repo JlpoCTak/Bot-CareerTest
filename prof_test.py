@@ -58,8 +58,9 @@ def test_holland():
             # print(len(list(professions.keys())))
             list_prof = list(professions.keys())
             for i in range(42):
-                # print(professions[f'{list_prof[i*2]}'])
-                # print(professions[f'{list_prof[i*2+1]}'])
+                print(f'{list_prof[i*2]}')
+                print(professions[f'{list_prof[i*2]}'])
+                print(professions[f'{list_prof[i*2+1]}'])
                 # print()
                 print(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']}"
                          f"\n2){list_prof[i*2+1]} - {professions[f'{list_prof[i*2+1]}']}")
