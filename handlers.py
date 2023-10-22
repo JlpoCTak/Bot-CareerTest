@@ -8,6 +8,7 @@ import aiogram.filters.callback_data as filters
 from aiogram.utils.markdown import hbold
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.state import State, StatesGroup
+from aiogram.filters.state import State,StatesGroup
 import json
 
 from kb import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
@@ -60,8 +61,8 @@ async def Test(callback: types.CallbackQuery):
                 )
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
                                               f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
-                await State.set_state(Order_answer.choosing_option1.state)
-                await State.set_state(Order_answer.choosing_option2.state)
+               # await State.set_state(Order_answer.choosing_option1.state) проблема с атрибутом
+               # await State.set_state(Order_answer.choosing_option2.state)
 
                 # print(F.callback_data)
                 # print(InlineKeyboardButton.callback_data)
