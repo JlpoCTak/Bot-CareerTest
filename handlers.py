@@ -75,7 +75,7 @@ async def Test(callback: types.CallbackQuery):
                # await message.answer(
                 #    f"1){list_prof[i * 2]}{user_data['chosen_option2']} - {professions[f'{list_prof[i * 2]}']}"
                  #   f"\n2){list_prof[i * +1]}{user_data['chosen_option1']} - {professions[f'{list_prof[i * 2 + 1]}']}",
-                    reply_markup=keyboard, )
+              #      reply_markup=keyboard, )
                # await State.update_data()
               #  await State.reset_state(with_data=False)
 
