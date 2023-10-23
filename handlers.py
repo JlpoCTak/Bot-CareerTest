@@ -1,6 +1,7 @@
 import time
 
 from aiogram import types, F, Router
+from aiogram.handlers import message
 from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -61,18 +62,22 @@ async def Test(callback: types.CallbackQuery):
                 )
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
                                               f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
-               # await State.set_state(Order_answer.choosing_option1.state) проблема с атрибутом
-               # await State.set_state(Order_answer.choosing_option2.state)
+                #await State.set_state(Order_answer.choosing_option1.state)
+                #await State.set_state(Order_answer.choosing_option2.state)
+                #user_data = State.get_data()
+                #answer = f'{i + 1}' + InlineKeyboardButton.callback_data
+                #for a in hol_table:
+                  #   if answer in hol_table[a]:
+                 #        dict_prof[a] += 1,
+                #for k, values in dict_prof.items():
+                # if values == max(dict_prof.values()):
+                #     max_ball_group.append(k)
+               # await message.answer(
+                #    f"1){list_prof[i * 2]}{user_data['chosen_option2']} - {professions[f'{list_prof[i * 2]}']}"
+                 #   f"\n2){list_prof[i * +1]}{user_data['chosen_option1']} - {professions[f'{list_prof[i * 2 + 1]}']}",
+                    reply_markup=keyboard, )
+               # await State.update_data()
+              #  await State.reset_state(with_data=False)
 
-                # print(F.callback_data)
-                # print(InlineKeyboardButton.callback_data)
-            #     answer = f'{i + 1}'# + InlineKeyboardButton.callback_data
-            #     for a in hol_table:
-            #         if answer in hol_table[a]:
-            #             dict_prof[a] += 1
-            # for k, values in dict_prof.items():
-            #     if values == max(dict_prof.values()):
-            #         max_ball_group.append(k)
-            #
 
 
