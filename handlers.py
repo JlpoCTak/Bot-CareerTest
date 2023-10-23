@@ -33,7 +33,7 @@ async def start_handler(msg: Message):
     )
 
 @router.callback_query(F.data == 'Test')
-async def Test(callback: types.CallbackQuery, state:FSMContext):
+async def Test(callback: types.CallbackQuery, state: FSMContext):
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
         with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
             dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0,
@@ -46,6 +46,11 @@ async def Test(callback: types.CallbackQuery, state:FSMContext):
                 class Order_answer(StatesGroup):
                     choosing_option1 = State(f'{list_prof[i * 2]}')
                     choosing_option2 = State(f'{list_prof[i * 2+1]}')
+                    choosing_option = State()
+
+                await state.set_state(Order_answer.choosing_option)
+                # await state.set_state(Order_answer.choosing_option1.state)
+                # await state.set_state(Order_answer.choosing_option2.state)
 
                 btn1 = InlineKeyboardButton(
                     text=f'{list_prof[i * 2]}',
@@ -59,21 +64,39 @@ async def Test(callback: types.CallbackQuery, state:FSMContext):
                     inline_keyboard=[[btn1],
                                      [btn2]]
                 )
-                await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
-                                              f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard)
-                await state.set_state(Order_answer.choosing_option1.state)
-                await state.set_state(Order_answer.choosing_option2.state)
-                await state.get_data()
-                
+                await callback.message.answer(f"1){list_prof[i * 2]} - {professions[f'{list_prof[i * 2]}']} "
+                                              f"\n2){list_prof[i * +1]} - {professions[f'{list_prof[i * 2 + 1]}']}",
+                                              reply_markup=keyboard)
+
+                otvet='c'
+                @router.callback_query(F.data=='answer_a')
+                async def answer(callback_query: types.CallbackQuery):
+                    await state.update_data(otvet='a')
+
+
+                @router.callback_query(F.data == 'answer_b')
+                async def answer(answ: types.CallbackQuery):
+                    await answ.update_data(otvet='b')
+
+
+
+
+
+
+                # print(user)
+                time.sleep(5)
+                print(otvet)
                 # print(F.callback_data)
                 # print(InlineKeyboardButton.callback_data)
-            #     answer = f'{i + 1}'# + InlineKeyboardButton.callback_data
-            #     for a in hol_table:
-            #         if answer in hol_table[a]:
-            #             dict_prof[a] += 1
-            # for k, values in dict_prof.items():
-            #     if values == max(dict_prof.values()):
-            #         max_ball_group.append(k)
-            #
+                answer = f'{i + 1}'+otvet
+                for a in hol_table:
+                    if answer in hol_table[a]:
+                        dict_prof[a] += 1
+                for k, values in dict_prof.items():
+                    if values == max(dict_prof.values()):
+                        max_ball_group.append(k)
 
+                await state.clear()
 
+            print(max_ball_group)
+            print(dict_prof)
