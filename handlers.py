@@ -33,7 +33,7 @@ async def start_handler(msg: Message):
     )
 
 @router.callback_query(F.data == 'Test')
-async def Test(callback: types.CallbackQuery):
+async def Test(callback: types.CallbackQuery, state:FSMContext):
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
         with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
             dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0,
@@ -60,10 +60,11 @@ async def Test(callback: types.CallbackQuery):
                                      [btn2]]
                 )
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
-                                              f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
-               # await State.set_state(Order_answer.choosing_option1.state) проблема с атрибутом
-               # await State.set_state(Order_answer.choosing_option2.state)
-
+                                              f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard)
+                await state.set_state(Order_answer.choosing_option1.state)
+                await state.set_state(Order_answer.choosing_option2.state)
+                await state.get_data()
+                
                 # print(F.callback_data)
                 # print(InlineKeyboardButton.callback_data)
             #     answer = f'{i + 1}'# + InlineKeyboardButton.callback_data
