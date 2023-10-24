@@ -67,11 +67,11 @@ async def Test(callback: types.CallbackQuery, state: FSMContext):
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
                                               f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
 
-                await state.set_state(Order_answer.choosing_option)
+                print(callback.data)
 
                 @router.callback_query(callback.data == 'answer_a')
                 def answer1(callback_answ: callback.data):
-                    
+                    pass
                 # await State.set_state(Order_answer.choosing_option1.state)
                 # await State.set_state(Order_answer.choosing_option2.state)
                 #user_data = State.get_data()
