@@ -34,7 +34,7 @@ async def start_handler(msg: Message):
     )
 
 @router.callback_query(F.data == 'Test')
-async def Test(callback: types.CallbackQuery):
+async def Test(callback: types.CallbackQuery, state: FSMContext):
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
         with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
             dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0,
@@ -47,6 +47,10 @@ async def Test(callback: types.CallbackQuery):
                 class Order_answer(StatesGroup):
                     choosing_option1 = State(f'{list_prof[i * 2]}')
                     choosing_option2 = State(f'{list_prof[i * 2+1]}')
+                    # choosing_option = State(f'{list_prof[i * 2]}',f'{list_prof[i * 2+1]}')
+                    choosing_option = State()
+
+                avaiable_option = [f'{list_prof[i * 2]}',f'{list_prof[i * 2+1]}']
 
                 btn1 = InlineKeyboardButton(
                     text=f'{list_prof[i * 2]}',
@@ -62,8 +66,14 @@ async def Test(callback: types.CallbackQuery):
                 )
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
                                               f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
-                #await State.set_state(Order_answer.choosing_option1.state)
-                #await State.set_state(Order_answer.choosing_option2.state)
+
+                await state.set_state(Order_answer.choosing_option)
+
+                @router.callback_query(callback.data == 'answer_a')
+                def answer1(callback_answ: callback.data):
+                    
+                # await State.set_state(Order_answer.choosing_option1.state)
+                # await State.set_state(Order_answer.choosing_option2.state)
                 #user_data = State.get_data()
                 #answer = f'{i + 1}' + InlineKeyboardButton.callback_data
                 #for a in hol_table:
