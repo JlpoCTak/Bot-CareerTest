@@ -5,7 +5,8 @@ def create():
     with sqlite3.connect('database/users.db') as connection:
         cursor = connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS users_answer (
-                        id INTEGER PRIMARY KEY
+                        id INTEGER PRIMARY KEY,
+                        user_tg_id INTEGER
                         )''')
 
 def add_column():
