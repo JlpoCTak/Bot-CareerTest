@@ -1,7 +1,6 @@
 import time
 
 from aiogram import types, F, Router
-from aiogram.handlers import message
 from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -34,7 +33,7 @@ async def start_handler(msg: Message):
     )
 
 @router.callback_query(F.data == 'Test')
-async def Test(callback: types.CallbackQuery):
+async def Test(callback: types.CallbackQuery, state: FSMContext):
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
         with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
             dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0,
@@ -47,6 +46,12 @@ async def Test(callback: types.CallbackQuery):
                 class Order_answer(StatesGroup):
                     choosing_option1 = State(f'{list_prof[i * 2]}')
                     choosing_option2 = State(f'{list_prof[i * 2+1]}')
+                    choosing_option = State()
+              #  for answer in hol_table_choosing_option:
+                    keyboard.add(answer)
+                await state.set_state(Order_answer.choosing_option)
+                await state.set_state(Order_answer.choosing_option1.state)
+                await state.set_state(Order_answer.choosing_option2.state)
 
                 btn1 = InlineKeyboardButton(
                     text=f'{list_prof[i * 2]}',
@@ -61,23 +66,47 @@ async def Test(callback: types.CallbackQuery):
                                      [btn2]]
                 )
                 await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
-                                              f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
-                #await State.set_state(Order_answer.choosing_option1.state)
-                #await State.set_state(Order_answer.choosing_option2.state)
-                #user_data = State.get_data()
-                #answer = f'{i + 1}' + InlineKeyboardButton.callback_data
-                #for a in hol_table:
-                  #   if answer in hol_table[a]:
-                 #        dict_prof[a] += 1,
-                #for k, values in dict_prof.items():
-                # if values == max(dict_prof.values()):
-                #     max_ball_group.append(k)
-               # await message.answer(
-                #    f"1){list_prof[i * 2]}{user_data['chosen_option2']} - {professions[f'{list_prof[i * 2]}']}"
-                 #   f"\n2){list_prof[i * +1]}{user_data['chosen_option1']} - {professions[f'{list_prof[i * 2 + 1]}']}",
-              #      reply_markup=keyboard, )
-               # await State.update_data()
-              #  await State.reset_state(with_data=False)
+                                              f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard)
+                await state.set_state(Order_answer.choosing_option1.state)
+                await state.set_state(Order_answer.choosing_option2.state)
+
+                option='c'
+                @router.callback_query(F.data=='answer_a')
+                async def answer(callback_query: types.CallbackQuery):
+                    await state.update_data(option='1')
+
+
+                @router.callback_query(F.data == 'answer_b')
+                async def answer(answ: types.CallbackQuery):
+                    await answ.update_data(option='2')
 
 
 
+
+
+
+                # print(user)
+                time.sleep(5)
+                print(option)
+                # print(F.callback_data)
+                # print(InlineKeyboardButton.callback_data)
+            #     answer = f'{i + 1}'# + InlineKeyboardButton.callback_data
+            #     for a in hol_table:
+            #         if answer in hol_table[a]:
+            #             dict_prof[a] += 1
+            # for k, values in dict_prof.items():
+            #     if values == max(dict_prof.values()):
+            #         max_ball_group.append(k)
+            #
+                answer = f'{i + 1}'+option
+                for a in hol_table:
+                    if answer in hol_table[a]:
+                        dict_prof[a] += 1
+                for k, values in dict_prof.items():
+                    if values == max(dict_prof.values()):
+                        max_ball_group.append(k)
+
+                await state.clear()
+
+            print(max_ball_group)
+            print(dict_prof)
