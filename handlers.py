@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from aiogram import types, F, Router
+from aiogram import types, F, Router, Bot, Dispatcher
 from aiogram.handlers import message
 from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
@@ -16,8 +16,11 @@ import sqlite3
 from kb import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 import text
 # from prof_test import test_holland
+
+TOKEN = '6680356595:AAGRMtLUHRBXUTXfJIv9qFhC3a53asrTmnY'
 router = Router()
 storage = MemoryStorage()
+bot = Bot(token=TOKEN)
 
 class WaitList(StatesGroup):
     wait_answer = State()
@@ -32,11 +35,68 @@ async def start_handler(msg: Message):
         text="Пройти тест",
         callback_data="Test")
     )
-    await msg.answer(f'Првиет, {msg.from_user.full_name}, я профориентационный бот, который поможет тебе с определением твоей будушей специальности',
+    await msg.answer(f'Привет, {msg.from_user.full_name}, я профориентационный бот, который поможет тебе с определением твоей будушей специальности',
                      reply_markup=builder.as_markup()
     )
 
+
+
+
+
 @router.callback_query(F.data == 'Test')
+async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
+    tg_user_id = callback.from_user.id
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute(f'''INSERT INTO users_answer (tg_user_id) VALUES (?)''', (tg_user_id,))
+        cursor.execute('COMMIT')
+    for number_question in range(42):
+        with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
+            professions = json.load(professions_text)
+            list_prof = list(professions.keys())
+            btn1 = InlineKeyboardButton(
+                text=f'{list_prof[number_question * 2]}',
+                callback_data='answer_a'
+            )
+            btn2 = InlineKeyboardButton(
+                text=f'{list_prof[number_question * 2 + 1]}',
+                callback_data='answer_b'
+            )
+            keyboard = InlineKeyboardMarkup(
+                inline_keyboard=[[btn1],
+                                 [btn2]]
+            )
+            await callback.message.answer(f"1){list_prof[number_question * 2]} - {professions[f'{list_prof[number_question * 2]}']} "
+                                          f"\n2){list_prof[number_question * +1]} - {professions[f'{list_prof[number_question * 2 + 1]}']}",
+                                          reply_markup=keyboard, )
+            tg_user_id = callback.from_user.id
+
+            @router.callback_query(F.data == 'answer_a')
+            async def answer_a(callback: types.CallbackQuery):
+                print(callback.data)
+                with sqlite3.connect('database/users.db') as connection:
+                    cursor = connection.cursor()
+                    cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
+                                   ('a', tg_user_id))
+
+            @router.callback_query(F.data == 'answer_b')
+            async def answer_a(callback: types.CallbackQuery):
+                print(callback.data)
+                with sqlite3.connect('database/users.db') as connection:
+                    cursor = connection.cursor()
+                    cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
+                                   ('b', tg_user_id))
+            print(callback.data)
+
+            flag = True
+            for i in range(999):
+                if callback.data!='Test':
+                    
+                    break
+                print('vlozenii cikl')
+                await asyncio.sleep(1)
+
+
 async def Test(callback: types.CallbackQuery, state: FSMContext):
     with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
         with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
@@ -44,45 +104,13 @@ async def Test(callback: types.CallbackQuery, state: FSMContext):
                 dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0,
                              'artistic': 0}
                 max_ball_group = []
-                professions = json.load(professions_text)
+
                 hol_table = json.load(holland_table)
-                list_prof = list(professions.keys())
+
                 cursor = connection.cursor()
-                for i in range(42):
 
 
-                    btn1 = InlineKeyboardButton(
-                        text=f'{list_prof[i * 2]}',
-                        callback_data='answer_a'
-                    )
-                    btn2 = InlineKeyboardButton(
-                        text=f'{list_prof[i * 2+1]}',
-                        callback_data='answer_b'
-                    )
-                    keyboard = InlineKeyboardMarkup(
-                        inline_keyboard=[[btn1],
-                                         [btn2]]
-                    )
-                    await callback.message.answer(f"1){list_prof[i*2]} - {professions[f'{list_prof[i*2]}']} "
-                                                  f"\n2){list_prof[i*+1]} - {professions[f'{list_prof[i*2+1]}']}", reply_markup=keyboard,)
 
-                    await state.set_state(WaitList.wait_answer)
-
-
-                    @router.callback_query(WaitList.wait_answer,F.data == 'answer_a')
-                    async def answer_a():
-                        answer = await state.get_data()
-                        await state.set_data(answer)
-
-
-                        await state.set_state(WaitList.get_answer)
-
-                    @router.callback_query(WaitList.wait_answer, F.data == 'answer_b')
-                    async def answer_b():
-                        answer = await state.get_data()
-                        await state.set_data(answer)
-
-                        await state.set_state(WaitList.get_answer)
 
 
 
