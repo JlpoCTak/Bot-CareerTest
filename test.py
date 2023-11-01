@@ -6,7 +6,7 @@ def create():
         cursor = connection.cursor()
         cursor.execute('''CREATE TABLE IF NOT EXISTS users_answer (
                         id INTEGER PRIMARY KEY,
-                        user_tg_id INTEGER
+                        tg_user_id INTEGER
                         )''')
 
 def add_column():
@@ -16,7 +16,7 @@ def add_column():
             cursor.execute(f'''ALTER TABLE users_answer ADD answ_{i} TEXT''')
 
 def main():
-    # create()
+    create()
     add_column()
 
 if __name__=='__main__':
