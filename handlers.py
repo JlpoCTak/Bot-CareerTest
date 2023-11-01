@@ -51,6 +51,7 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
         cursor.execute(f'''INSERT INTO users_answer (tg_user_id) VALUES (?)''', (tg_user_id,))
         cursor.execute('COMMIT')
     for number_question in range(42):
+        print(f'{number_question} итерация')
         with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
             professions = json.load(professions_text)
             list_prof = list(professions.keys())
@@ -71,9 +72,12 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
                                           reply_markup=keyboard, )
             tg_user_id = callback.from_user.id
 
+            flag = True
             @router.callback_query(F.data == 'answer_a')
             async def answer_a(callback: types.CallbackQuery):
                 print(callback.data)
+                nonlocal flag
+                flag = False
                 with sqlite3.connect('database/users.db') as connection:
                     cursor = connection.cursor()
                     cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
@@ -82,18 +86,19 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
             @router.callback_query(F.data == 'answer_b')
             async def answer_a(callback: types.CallbackQuery):
                 print(callback.data)
+                nonlocal flag
+                flag = False
                 with sqlite3.connect('database/users.db') as connection:
+
                     cursor = connection.cursor()
                     cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
                                    ('b', tg_user_id))
+
             print(callback.data)
 
-            flag = True
-            for i in range(999):
-                if callback.data!='Test':
-                    
-                    break
-                print('vlozenii cikl')
+
+            while flag:
+                
                 await asyncio.sleep(1)
 
 
