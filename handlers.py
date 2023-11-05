@@ -24,6 +24,7 @@ bot = Bot(token=TOKEN)
 
 
 class WaitList(StatesGroup):
+    answer_question = State()
     start = State()
     passed_test = State()
 
@@ -35,22 +36,29 @@ async def start_handler(msg: Message, state: FSMContext):
         text="Пройти тест",
         callback_data="Test")
     )
-    await msg.answer(f'Привет, {msg.from_user.full_name}, я профориентационный бот, который поможет тебе с определением твоей будушей специальности',
+    await msg.answer(f'Привет, {msg.from_user.full_name}, я профориентационный бот,'
+                     f' который поможет тебе с определением твоей будушей специальности',
                      reply_markup=builder.as_markup()
     )
+    tg_user_id = msg.from_user.id
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute(f'''INSERT INTO users_answer (tg_user_id) VALUES (?)''', (tg_user_id,))
+        cursor.execute('COMMIT')
     await state.set_state(WaitList.start)
+    dict_num_ques = {}
+    dict_num_ques['number_question'] = 0
+    await state.set_data(dict_num_ques)
 
 
 @router.callback_query(F.data == 'Test')
 async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    tg_user_id = callback.from_user.id
-    with sqlite3.connect('database/users.db') as connection:
-        cursor = connection.cursor()
-        cursor.execute(f'''INSERT INTO users_answer (tg_user_id) VALUES (?)''', (tg_user_id,))
-        cursor.execute('COMMIT')
-    for number_question in range(42):
+    number_question = (await state.get_data())['number_question']
 
+    print(number_question)
+
+    if number_question < 42:
         with open('database/professions_for_text.json', 'r', encoding='utf-8') as professions_text:
             professions = json.load(professions_text)
             list_prof = list(professions.keys())
@@ -70,46 +78,61 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
                                           f"\n1){list_prof[number_question * 2]} - {professions[f'{list_prof[number_question * 2]}']} "
                                           f"\n2){list_prof[number_question * +1]} - {professions[f'{list_prof[number_question * 2 + 1]}']}",
                                           reply_markup=keyboard, )
-            tg_user_id = callback.from_user.id
 
-            flag = True
 
-            @router.callback_query(F.data == 'answer_a')
-            async def answer_a(callback: types.CallbackQuery):
 
-                nonlocal flag
-                flag = False
-
-                with sqlite3.connect('database/users.db') as connection:
-                    cursor = connection.cursor()
-                    cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
-                                   ('a', tg_user_id))
-                await callback.message.delete()
-
-            @router.callback_query(F.data == 'answer_b')
-            async def answer_b(callback: types.CallbackQuery):
-
-                nonlocal flag
-                flag = False
-
-                with sqlite3.connect('database/users.db') as connection:
-
-                    cursor = connection.cursor()
-                    cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
-                                   ('b', tg_user_id))
-                await callback.message.delete()
             print(callback.data)
             print('number question', number_question+1)
-            while flag:
-                await asyncio.sleep(0.1)
-    await callback.answer('Вы прошли тест, теперь введите город в котором вы хотите обучаться')
-    await state.set_state(WaitList.passed_test)
+    elif number_question>41:
+        await callback.message.answer('Вы прошли тест, теперь введите город в котором вы хотите обучаться')
+        await state.set_state(WaitList.passed_test)
 
 
+@router.callback_query(F.data == 'answer_a')
+async def answer_a(callback: types.CallbackQuery, state: FSMContext):
+
+    tg_user_id = callback.from_user.id
+    number_question = (await state.get_data())['number_question']
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
+                       ('a', tg_user_id))
+    await callback.message.delete()
+    dict_num_ques = {}
+    dict_num_ques[f'number_question'] = number_question+1
+    await state.update_data(dict_num_ques)
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(InlineKeyboardButton(
+        text=f'>>>',
+        callback_data='Test'
+    ))
+    await callback.message.answer('Перейти к следущему вопросу', reply_markup=keyboard.as_markup())
 
 
+@router.callback_query(F.data == 'answer_b')
+async def answer_b(callback: types.CallbackQuery, state: FSMContext):
+    tg_user_id = callback.from_user.id
 
-@router.message( F.text =='Тест') #WaitList.passed_test,
+    number_question = (await state.get_data())['number_question']
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute(f'''UPDATE users_answer SET answ_{number_question+1} = ? WHERE tg_user_id = ?''',
+                       ('b', tg_user_id))
+
+    await callback.message.delete()
+    dict_num_ques = {}
+    dict_num_ques[f'number_question'] = number_question + 1
+    await state.update_data(dict_num_ques)
+    await state.set_state(WaitList.answer_question)
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(InlineKeyboardButton(
+        text=f'>>>',
+        callback_data='Test'
+    ))
+    await callback.message.answer('Перейти к следущему вопросу', reply_markup=keyboard.as_markup())
+
+
+@router.message(F.text == 'Тест') #WaitList.passed_test,
 async def final(msg: Message, state: FSMContext):
     with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
         with sqlite3.connect('database/users.db') as connection:
@@ -272,3 +295,4 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         callback_data=f'professions_{start_btns + 5}_{end_btns + 5}'
     ))
     await callback.message.answer(text='/',reply_markup=keyboard.as_markup(resize_keyboard=True))
+
