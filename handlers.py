@@ -294,5 +294,18 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         text='>>>',
         callback_data=f'professions_{start_btns + 5}_{end_btns + 5}'
     ))
-    await callback.message.answer(text='/',reply_markup=keyboard.as_markup(resize_keyboard=True))
+    await callback.message.answer(text='/', reply_markup=keyboard.as_markup(resize_keyboard=True))
+    with open('specs_for_test_holland.json', 'r') as json_file:
+        job_positions = json.load(json_file)
 
+        response = "Список профессий:\n"
+        count = 0
+        for job_code, job_name in job_positions.items():
+            response += f"{job_code}: {job_name}\n"
+            count += 1
+            if count == 5:
+                await bot.send_message(chat_id=message.chat.id, text=response)
+                response = ""
+                count = 0
+        if response != "":
+            await bot.send_message(chat_id=message.chat.id, text=response)
