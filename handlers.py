@@ -88,6 +88,13 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
         await state.set_state(WaitList.passed_test)
 
 
+@router.message(WaitList.passed_test, F.text == 'Город')
+async def take_city(msg: Message, state: FSMContext):
+    city = msg.text
+    print()
+
+
+
 @router.callback_query(F.data == 'answer_a')
 async def answer_a(callback: types.CallbackQuery, state: FSMContext):
 
@@ -345,7 +352,7 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         for key in range((end_btns-5), len_group+1):
             keyboard.row(InlineKeyboardButton(
                 text=f'{group[keys[key]]}',
-                callback_data='asdasdasd'
+                callback_data=f'profname_{group[keys[key]]}'
             ))
         keyboard.row(InlineKeyboardButton(
             text='<<<',
@@ -357,5 +364,9 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
                                       reply_markup=keyboard.as_markup(resize_keyboards=False))
 
-
     await callback.message.delete()
+
+@router.callback_query(F.data.startswith('profname_'))
+async def print_college(callback: types.CallbackQuery, state: FSMContext):
+    pass
+
