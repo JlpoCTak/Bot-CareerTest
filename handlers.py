@@ -83,7 +83,7 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
 
             print(callback.data)
             print('number question', number_question+1)
-    elif number_question>41:
+    elif number_question > 41:
         await callback.message.answer('Вы прошли тест, теперь введите город в котором вы хотите обучаться')
         await state.set_state(WaitList.passed_test)
 
@@ -166,7 +166,7 @@ async def final(msg: Message, state: FSMContext):
                 await msg.answer(f'По итогам теста мы определили {len(max_ball_group)} типов личности, с профессиями, '
                                  f'которые могут вам подойти.')
             await asyncio.sleep(5)
-            await msg.answer('Вот названия групп и что они означают')
+            await msg.answer('Вот названия типов и что они означают')
             await asyncio.sleep(3)
             # if 'social' in max_ball_group:
             #     print(';2561651d5f1dsf')
@@ -270,29 +270,92 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
     prof_group = 0
     for k in profs_group:
         prof_group = k
-    print(prof_group)
 
     with open('database/specs_for_test_holland.json', 'r', encoding='utf-8') as spec_groups:
         spec_group = json.load(spec_groups)
         group = spec_group[prof_group]  # словарь "код":"название специальности"
     keys = []
+    len_group = len(group)-1
+    max_pages = (len_group//5)+1
+
     for key in group.keys():
         keys.append(key)
-    print(keys)
+
+
     start_btns = int(callback.data.split('_')[1])
     end_btns = int(callback.data.split('_')[2])
-    keyboard = InlineKeyboardBuilder()
-    for key in range(start_btns, end_btns):
+    current_page = (end_btns//5)
+    print(start_btns)
+    print(end_btns)
+    print('len_group: ', len_group)
+    print('max_pages ', max_pages)
+    print('max_pages*5 ', max_pages*5)
+    if end_btns <= len_group and start_btns >= 0:
+        print('if')
+        if current_page == 1:
+            keyboard = InlineKeyboardBuilder()
+            for key in range(start_btns, end_btns):
+                keyboard.row(InlineKeyboardButton(
+                    text=f'{group[keys[key]]}',
+                    callback_data='asdasdasd'
+                ))
+            keyboard.row(InlineKeyboardButton(
+                text='<<<',
+                callback_data=f'professions_{len_group-(len_group-(len_group//5)*5)}_{len_group+1}'
+            ), InlineKeyboardButton(
+                text='>>>',
+                callback_data=f'professions_{start_btns + 5}_{end_btns + 5}'
+            ))
+            await callback.message.answer(text=f'Страница: {current_page} из {max_pages}', reply_markup=keyboard.as_markup(resize_keyboards=False))
+        elif current_page == max_pages:
+            keyboard = InlineKeyboardBuilder()
+            for key in range(start_btns, end_btns):
+                keyboard.row(InlineKeyboardButton(
+                    text=f'{group[keys[key]]}',
+                    callback_data='asdasdasd'
+                ))
+            keyboard.row(InlineKeyboardButton(
+                text='<<<',
+                callback_data=f'professions_{start_btns - 5}_{end_btns - 5}'
+            ), InlineKeyboardButton(
+                text='>>>',
+                callback_data=f'professions_0_5'
+            ))
+            await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
+                                          reply_markup=keyboard.as_markup(resize_keyboards=False))
+        else:
+            keyboard = InlineKeyboardBuilder()
+            for key in range(start_btns, end_btns):
+                keyboard.row(InlineKeyboardButton(
+                    text=f'{group[keys[key]]}',
+                    callback_data='asdasdasd'
+                ))
+            keyboard.row(InlineKeyboardButton(
+                text='<<<',
+                callback_data=f'professions_{start_btns - 5}_{end_btns - 5}'
+            ), InlineKeyboardButton(
+                text='>>>',
+                callback_data=f'professions_{start_btns + 5}_{end_btns + 5}'
+            ))
+            await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
+                                          reply_markup=keyboard.as_markup(resize_keyboards=False))
+    elif (current_page/max_pages) == 1:
+        print('elif 1')
+        keyboard = InlineKeyboardBuilder()
+        for key in range((end_btns-5), len_group+1):
+            keyboard.row(InlineKeyboardButton(
+                text=f'{group[keys[key]]}',
+                callback_data='asdasdasd'
+            ))
         keyboard.row(InlineKeyboardButton(
-            text=f'{group[keys[key]]}',
-            callback_data=None
+            text='<<<',
+            callback_data=f'professions_{start_btns - 5}_{end_btns - 5}'
+        ), InlineKeyboardButton(
+            text='>>>',
+            callback_data=f'professions_{0}_{5}'
         ))
-    keyboard.add(InlineKeyboardButton(
-        text='<<<',
-        callback_data=f'professions_{start_btns-5}_{end_btns-5}'
-    ),InlineKeyboardButton(
-        text='>>>',
-        callback_data=f'professions_{start_btns + 5}_{end_btns + 5}'
-    ))
-    await callback.message.answer(text='/',reply_markup=keyboard.as_markup(resize_keyboard=True))
+        await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
+                                      reply_markup=keyboard.as_markup(resize_keyboards=False))
 
+
+    await callback.message.delete()
