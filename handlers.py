@@ -1,6 +1,6 @@
 import asyncio
 import time
-
+import hashlib
 from aiogram import types, F, Router, Bot, Dispatcher
 from aiogram.handlers import message
 from aiogram.types import Message
@@ -15,6 +15,7 @@ import json
 import sqlite3
 from kb import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 import text
+import work_with_db
 # from prof_test import test_holland
 
 TOKEN = '6680356595:AAGRMtLUHRBXUTXfJIv9qFhC3a53asrTmnY'
@@ -86,6 +87,16 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
     elif number_question > 41:
         await callback.message.answer('Вы прошли тест, теперь введите город в котором вы хотите обучаться')
         await state.set_state(WaitList.passed_test)
+
+
+@router.message(WaitList.passed_test, F.text == 'Город')
+async def take_city(msg: Message, state: FSMContext):
+    city = msg.text
+    user_id = msg.from_user.id
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute('''UPDATE users_answer SET city = ? WHERE tg_user_id = ?''', (city, user_id))
+
 
 
 @router.callback_query(F.data == 'answer_a')
@@ -290,14 +301,23 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
     print('len_group: ', len_group)
     print('max_pages ', max_pages)
     print('max_pages*5 ', max_pages*5)
+
     if end_btns <= len_group and start_btns >= 0:
         print('if')
         if current_page == 1:
+
             keyboard = InlineKeyboardBuilder()
             for key in range(start_btns, end_btns):
+                with sqlite3.connect('database/users.db') as connection:
+                    cursor = connection.cursor()
+                    code_profs = cursor.execute('''SELECT code FROM specs WHERE name = ?''', (group[keys[key]],))
+
+                    for code_prof in code_profs:
+                        code_prof = code_prof[0]
+
                 keyboard.row(InlineKeyboardButton(
                     text=f'{group[keys[key]]}',
-                    callback_data='asdasdasd'
+                    callback_data=f'profname_{code_prof}'
                 ))
             keyboard.row(InlineKeyboardButton(
                 text='<<<',
@@ -310,9 +330,16 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         elif current_page == max_pages:
             keyboard = InlineKeyboardBuilder()
             for key in range(start_btns, end_btns):
+                with sqlite3.connect('database/users.db') as connection:
+                    cursor = connection.cursor()
+                    code_profs = cursor.execute('''SELECT code FROM specs WHERE name = ?''', (group[keys[key]],))
+
+                    for code_prof in code_profs:
+                        code_prof = code_prof[0]
+
                 keyboard.row(InlineKeyboardButton(
                     text=f'{group[keys[key]]}',
-                    callback_data='asdasdasd'
+                    callback_data=f'profname_{code_prof}'
                 ))
             keyboard.row(InlineKeyboardButton(
                 text='<<<',
@@ -326,9 +353,16 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         else:
             keyboard = InlineKeyboardBuilder()
             for key in range(start_btns, end_btns):
+                with sqlite3.connect('database/users.db') as connection:
+                    cursor = connection.cursor()
+                    code_profs = cursor.execute('''SELECT code FROM specs WHERE name = ?''', (group[keys[key]],))
+
+                    for code_prof in code_profs:
+                        code_prof = code_prof[0]
+
                 keyboard.row(InlineKeyboardButton(
                     text=f'{group[keys[key]]}',
-                    callback_data='asdasdasd'
+                    callback_data=f'profname_{code_prof}'
                 ))
             keyboard.row(InlineKeyboardButton(
                 text='<<<',
@@ -342,10 +376,18 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
     elif (current_page/max_pages) == 1:
         print('elif 1')
         keyboard = InlineKeyboardBuilder()
+
         for key in range((end_btns-5), len_group+1):
+            with sqlite3.connect('database/users.db') as connection:
+                cursor = connection.cursor()
+                code_profs = cursor.execute('''SELECT code FROM specs WHERE name = ?''', (group[keys[key]],))
+
+                for code_prof in code_profs:
+                    code_prof = code_prof[0]
+
             keyboard.row(InlineKeyboardButton(
                 text=f'{group[keys[key]]}',
-                callback_data='asdasdasd'
+                callback_data=f'profname_{code_prof}'
             ))
         keyboard.row(InlineKeyboardButton(
             text='<<<',
@@ -378,6 +420,7 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
             await bot.send_message(chat_id=message.chat.id, text=response)
         await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
                                       reply_markup=keyboard.as_markup(resize_keyboards=False))
+
     await callback.message.delete()
 
 @router.callback_query(F.data == "Menu")
@@ -393,4 +436,34 @@ async def restart_test(msg: Message, state: FSMContext):
     btn2 = ReplyKeyboardBuilder(
         text='Выбрать город',
     )
+
+
+@router.callback_query(F.data.startswith('profname_'))
+async def print_college(callback: types.CallbackQuery, state: FSMContext):
+    prof_code = callback.data.split('_')[1]
+    # print(prof_code)
+    user_id = callback.from_user.id
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute('''UPDATE users_answer SET prof_code = ? WHERE tg_user_id = ?''', (prof_code, user_id))
+
+
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        data_user = cursor.execute('''SELECT city, prof_code FROM users_answer WHERE tg_user_id = ?''', (user_id,))
+        for data in data_user:
+            info_user = list(data)
+
+    print(info_user)
+    town_list = work_with_db.find_college(info_user[1], work_with_db.search_city(info_user[0]))
+    keyboard = InlineKeyboardBuilder()
+    for college in town_list:
+        print(college)
+        print(college.split(":")[1]+college.split(":")[2])
+        keyboard.row(InlineKeyboardButton(
+            text=f'{college.split(":")[0]}',
+            url=f'{college.split(":")[1]+":"+college.split(":")[2]}'
+        ))
+    await callback.message.answer(text=f'Вот список колледжей в выбранном городе по вашей професии:',
+                                  reply_markup=keyboard.as_markup(resize_keyboards=False))
 
