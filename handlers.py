@@ -89,7 +89,7 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
         await state.set_state(WaitList.passed_test)
 
 
-@router.message(WaitList.passed_test, F.text == 'Город')
+@router.message(WaitList.passed_test)
 async def take_city(msg: Message, state: FSMContext):
     city = msg.text
     user_id = msg.from_user.id
@@ -396,46 +396,10 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
             text='>>>',
             callback_data=f'professions_{0}_{5}'
         ))
-    keyboard.add(InlineKeyboardButton(
-        text='<<<',
-        callback_data=f'professions_{start_btns-5}_{end_btns-5}'
-    ),InlineKeyboardButton(
-        text='>>>',
-        callback_data=f'professions_{start_btns + 5}_{end_btns + 5}'
-    ))
-    await callback.message.answer(text='/', reply_markup=keyboard.as_markup(resize_keyboard=True))
-    with open('specs_for_test_holland.json', 'r') as json_file:
-        job_positions = json.load(json_file)
-
-        response = "Список профессий:\n"
-        count = 0
-        for job_code, job_name in job_positions.items():
-            response += f"{job_code}: {job_name}\n"
-            count += 1
-            if count == 5:
-                await bot.send_message(chat_id=message.chat.id, text=response)
-                response = ""
-                count = 0
-        if response != "":
-            await bot.send_message(chat_id=message.chat.id, text=response)
         await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
                                       reply_markup=keyboard.as_markup(resize_keyboards=False))
 
     await callback.message.delete()
-
-@router.callback_query(F.data == "Menu")
-async def restart_test(msg: Message, state: FSMContext):
-    bth = ReplyKeyboardBuilder(
-        text='Перепройти тест',
-        callback_data='Test'
-    )
-    bth1 = ReplyKeyboardBuilder(
-        text='Посмотреть результат теста',
-        callback_data='result'
-    )
-    btn2 = ReplyKeyboardBuilder(
-        text='Выбрать город',
-    )
 
 
 @router.callback_query(F.data.startswith('profname_'))
@@ -467,3 +431,44 @@ async def print_college(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(text=f'Вот список колледжей в выбранном городе по вашей професии:',
                                   reply_markup=keyboard.as_markup(resize_keyboards=False))
 
+@router.message(Command("menu"))
+async def menu(msg: Message, state: FSMContext):
+    keyboard = ReplyKeyboardBuilder()
+    for i in range(1):
+     keyboard.add(
+types.KeyboardButton(text='Перепройти тест'),
+        types.KeyboardButton(text='Посмотреть результат теста'),
+        types.KeyboardButton(text='Показать город'),
+        types.KeyboardButton(text='Назад')
+        )
+    keyboard.adjust(1)
+    await msg.answer("Выберите действие", reply_markup=keyboard.as_markup(resize_keyboards=True))
+
+@router.message(F.text == "Показать город")
+async def city(msg: types.Message):
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        city_from_user_id = msg.from_user.id
+        cursor.execute('''SELECT city FROM users_answer WHERE tg_user_id = ?''', (city_from_user_id,))
+        city_result = cursor.fetchone()
+        if city_result:
+            city_from_user = city_result[0]
+            await msg.answer(text=f'Выбранный вами город: {city_from_user}')
+
+@router.message(F.text == "Перепройти тест")
+async def test_restart(msg: Message):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(InlineKeyboardButton(
+        text="Подтвердить",
+        callback_data="Test")
+    )
+    await msg.answer("Вы готовы перепройти тест", reply_markup=keyboard.as_markup(resize_keybiards=True))
+
+@router.message(F.text == "Посмотреть результат теста")
+async def test_restart(msg: Message):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(InlineKeyboardButton(
+        text="Посмотреть",
+        callback_data="Тест")
+    )
+    await msg.answer("Вы хотите посмотреть результаты теста", reply_markup=keyboard.as_markup(resize_keybiards=True))
