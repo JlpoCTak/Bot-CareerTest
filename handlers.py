@@ -1,6 +1,6 @@
 import asyncio
 import time
-
+import hashlib
 from aiogram import types, F, Router, Bot, Dispatcher
 from aiogram.handlers import message
 from aiogram.types import Message
@@ -300,11 +300,16 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
     if end_btns <= len_group and start_btns >= 0:
         print('if')
         if current_page == 1:
+
             keyboard = InlineKeyboardBuilder()
             for key in range(start_btns, end_btns):
+                print(group[keys[key]])
+                prof_name = group[keys[key]]
+                hash_prof_name = hashlib.md5(prof_name.encode('utf-8')).hexdigest()
+                print(hash_prof_name)
                 keyboard.row(InlineKeyboardButton(
                     text=f'{group[keys[key]]}',
-                    callback_data='asdasdasd'
+                    callback_data=f'profname_{group[keys[key]]}'
                 ))
             keyboard.row(InlineKeyboardButton(
                 text='<<<',
@@ -319,7 +324,7 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
             for key in range(start_btns, end_btns):
                 keyboard.row(InlineKeyboardButton(
                     text=f'{group[keys[key]]}',
-                    callback_data='asdasdasd'
+                    callback_data=f'profname_{group[keys[key]]}'
                 ))
             keyboard.row(InlineKeyboardButton(
                 text='<<<',
@@ -335,7 +340,7 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
             for key in range(start_btns, end_btns):
                 keyboard.row(InlineKeyboardButton(
                     text=f'{group[keys[key]]}',
-                    callback_data='asdasdasd'
+                    callback_data=f'profname_{group[keys[key]]}'
                 ))
             keyboard.row(InlineKeyboardButton(
                 text='<<<',
@@ -349,7 +354,11 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
     elif (current_page/max_pages) == 1:
         print('elif 1')
         keyboard = InlineKeyboardBuilder()
+
         for key in range((end_btns-5), len_group+1):
+            print(group[keys[key]])
+            hash_prof_name = hashlib.md5(group[keys[key]])
+            print(hash_prof_name)
             keyboard.row(InlineKeyboardButton(
                 text=f'{group[keys[key]]}',
                 callback_data=f'profname_{group[keys[key]]}'
@@ -366,7 +375,10 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
 
     await callback.message.delete()
 
+
 @router.callback_query(F.data.startswith('profname_'))
 async def print_college(callback: types.CallbackQuery, state: FSMContext):
-    pass
+    prof_name = callback.data.split('_')[1]
+    print(prof_name)
+    print(f'{prof_name}')
 
