@@ -5,7 +5,7 @@ from aiogram import types, F, Router, Bot, Dispatcher
 from aiogram.handlers import message
 from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 import aiogram.filters.callback_data as filters
 from aiogram.utils.markdown import hbold
 from aiogram.fsm.context import FSMContext
@@ -379,4 +379,18 @@ async def list_profs(callback: types.CallbackQuery, state:FSMContext):
         await callback.message.answer(text=f'Страница: {current_page} из {max_pages}',
                                       reply_markup=keyboard.as_markup(resize_keyboards=False))
     await callback.message.delete()
+
+@router.callback_query(F.data == "Menu")
+async def restart_test(msg: Message, state: FSMContext):
+    bth = ReplyKeyboardBuilder(
+        text='Перепройти тест',
+        callback_data='Test'
+    )
+    bth1 = ReplyKeyboardBuilder(
+        text='Посмотреть результат теста',
+        callback_data='result'
+    )
+    btn2 = ReplyKeyboardBuilder(
+        text='Выбрать город',
+    )
 
