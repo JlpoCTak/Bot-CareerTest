@@ -79,13 +79,15 @@ async def ask_questions(callback: types.CallbackQuery, state: FSMContext):
                                  [btn2]]
             )
             await callback.message.answer(f"Вопрос №{number_question+1}\n"
+                                          f"Выберите наиболее близкую для вас профессию: "
                                           f"\n1){list_prof[number_question * 2]} - {professions[f'{list_prof[number_question * 2]}']} "
-                                          f"\n2){list_prof[number_question * +1]} - {professions[f'{list_prof[number_question * 2 + 1]}']}",
+                                          f"\n2){list_prof[number_question * 2+1]} - {professions[f'{list_prof[number_question * 2 + 1]}']}",
                                           reply_markup=keyboard, )
 
             print(callback.data)
             print('number question', number_question+1)
     elif number_question > 41:
+
         await callback.message.answer('Вы прошли тест, теперь введите город в котором вы хотите обучаться')
         await state.set_state(WaitList.change_city)
 
@@ -98,6 +100,8 @@ async def take_city(msg: Message, state: FSMContext):
         cursor = connection.cursor()
         cursor.execute('''UPDATE users_answer SET city = ? WHERE tg_user_id = ?''', (city, user_id))
     await state.set_state(WaitList.menu)
+    await msg.answer(text=f'Вы выбрали город, теперь в городе {city}, вы можете выбрать спецальность ')
+    await msg.answer('Теперь вам доступно меню')
     bot_commands = [
         types.BotCommand(command="/menu", description="меню действий"),
 
@@ -445,13 +449,20 @@ async def menu(msg: Message, state: FSMContext):
 
 @router.message(WaitList.menu, Command("menu"))
 async def menu(msg: Message, state: FSMContext):
+    with sqlite3.connect('database/users.db') as connection:
+        cursor = connection.cursor()
+        city_from_user_id = msg.from_user.id
+        cursor.execute('''SELECT city FROM users_answer WHERE tg_user_id = ?''', (city_from_user_id,))
+        city_result = cursor.fetchone()
+        if city_result:
+            city_from_user = city_result[0]
     keyboard = ReplyKeyboardBuilder()
     for i in range(1):
      keyboard.add(
 types.KeyboardButton(text='Перепройти тест'),
         types.KeyboardButton(text='Посмотреть результат теста'),
         types.KeyboardButton(text='Показать город'),
-        types.KeyboardButton(text='Назад')
+        types.KeyboardButton(text=f'Посмотреть спецальности в выбранном городе : {city_from_user}')
         )
     keyboard.adjust(1)
     await msg.answer("Выберите действие", reply_markup=keyboard.as_markup(resize_keyboards=True))
@@ -500,11 +511,21 @@ async def test_restart(msg: Message, state: FSMContext):
     await msg.answer("Вы готовы перепройти тест", reply_markup=keyboard.as_markup(resize_keybiards=True))
 
 
-@router.message(F.text == "Посмотреть результат теста")
-async def test_restart(msg: Message):
+@router.message(F.text == "Посмотреть результат теста ")
+async def test_restart(msg: Message,):
     keyboard = InlineKeyboardBuilder()
     keyboard.add(InlineKeyboardButton(
         text="Посмотреть",
         callback_data="result_test")
     )
     await msg.answer("Вы хотите посмотреть результаты теста", reply_markup=keyboard.as_markup(resize_keyboards=True))
+
+
+@router.message(F.text =="Посмотреть специальности в выбранном городе:")
+async def specs_list(msg: Message):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(InlineKeyboardButton(
+        text="Выбрать специальность",
+        callback_data="professions_"
+    ))
+    await msg.answer("Выбрать специальность", reply_markup=keyboard.as_markup(resize_keyboards=True))
