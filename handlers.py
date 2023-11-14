@@ -1,4 +1,5 @@
 import asyncio
+import os
 import time
 import hashlib
 from aiogram import types, F, Router, Bot, Dispatcher
@@ -18,7 +19,7 @@ import text
 import work_with_db
 # from prof_test import test_holland
 
-TOKEN = '6680356595:AAGRMtLUHRBXUTXfJIv9qFhC3a53asrTmnY'
+TOKEN = os.getenv('TOKEN')
 router = Router()
 storage = MemoryStorage()
 bot = Bot(token=TOKEN)
@@ -462,7 +463,7 @@ async def menu(msg: Message, state: FSMContext):
 types.KeyboardButton(text='Перепройти тест'),
         types.KeyboardButton(text='Посмотреть результат теста'),
         types.KeyboardButton(text='Показать город'),
-        types.KeyboardButton(text=f'Посмотреть спецальности в выбранном городе : {city_from_user}')
+        types.KeyboardButton(text=f'Посмотреть специальности в выбранном городе:')
         )
     keyboard.adjust(1)
     await msg.answer("Выберите действие", reply_markup=keyboard.as_markup(resize_keyboards=True))
@@ -511,7 +512,7 @@ async def test_restart(msg: Message, state: FSMContext):
     await msg.answer("Вы готовы перепройти тест", reply_markup=keyboard.as_markup(resize_keybiards=True))
 
 
-@router.message(F.text == "Посмотреть результат теста ")
+@router.message(F.text == "Посмотреть результат теста")
 async def test_restart(msg: Message,):
     keyboard = InlineKeyboardBuilder()
     keyboard.add(InlineKeyboardButton(
@@ -521,7 +522,7 @@ async def test_restart(msg: Message,):
     await msg.answer("Вы хотите посмотреть результаты теста", reply_markup=keyboard.as_markup(resize_keyboards=True))
 
 
-@router.message(F.text =="Посмотреть специальности в выбранном городе:")
+@router.message(F.text == "Посмотреть специальности в выбранном городе:")
 async def specs_list(msg: Message):
     keyboard = InlineKeyboardBuilder()
     keyboard.add(InlineKeyboardButton(

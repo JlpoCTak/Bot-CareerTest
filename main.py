@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import sys
+import os
 
 from aiogram import Bot, Dispatcher, Router, types
 from aiogram.enums.parse_mode import ParseMode
@@ -9,7 +10,7 @@ from handlers import router
 import config
 
 dp = Dispatcher()
-TOKEN = '6680356595:AAGRMtLUHRBXUTXfJIv9qFhC3a53asrTmnY'
+TOKEN = os.getenv('TOKEN')
 async def main():
     bot = Bot(token=config.Bot_TOKEN, parse_mode=ParseMode.HTML)
     dp = Dispatcher(storage=MemoryStorage())
