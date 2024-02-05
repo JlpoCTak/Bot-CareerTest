@@ -12,7 +12,7 @@ import config
 dp = Dispatcher()
 TOKEN = os.getenv('TOKEN')
 async def main():
-    bot = Bot(token=config.Bot_TOKEN, parse_mode=ParseMode.HTML)
+    bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(router)
     await bot.delete_webhook(drop_pending_updates=True)
