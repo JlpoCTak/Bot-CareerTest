@@ -168,6 +168,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
             tg_user_id = callback.from_user.id
             answer_list = []
             for i in range(42):
+<<<<<<< Updated upstream
                 answer = cursor.execute(f'''SELECT answ_{i+1} FROM users_answer WHERE tg_user_id = ?''',(tg_user_id,))
                 for ans in answer:
                     answer_list.append(ans[0])
@@ -492,8 +493,46 @@ async def city(msg: types.Message):
 async def change_city_callback(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer('Введите город')
     await state.set_state(WaitList.change_city)
+=======
+                class Order_answer(StatesGroup):
+                    choosing_option1 = State(f'{list_prof[i * 2]}')
+                    choosing_option2 = State(f'{list_prof[i * 2+1]}')
+                    choosing_option = State()
+                    result = State()
+
+                await state.set_state(Order_answer.choosing_option)
+                # await state.set_state(Order_answer.choosing_option1.state)
+                # await state.set_state(Order_answer.choosing_option2.state)
+
+                btn1 = InlineKeyboardButton(
+                    text=f'{list_prof[i * 2]}',
+                    callback_data='answer_a'
+                )
+                btn2 = InlineKeyboardButton(
+                    text=f'{list_prof[i * 2+1]}',
+                    callback_data='answer_b'
+                )
+                keyboard = InlineKeyboardMarkup(
+                    inline_keyboard=[[btn1],
+                                     [btn2]]
+                )
+                await callback.message.answer(f"1){list_prof[i * 2]} - {professions[f'{list_prof[i * 2]}']} "
+                                              f"\n2){list_prof[i * +1]} - {professions[f'{list_prof[i * 2 + 1]}']}",
+                                              reply_markup=keyboard)
+
+                otvet='c'
+                @router.callback_query(F.data=='answer_a',Order_answer.choosing_option)
+                async def answer(callback_query: types.CallbackQuery):
+                    await state.update_data(otvet='a')
 
 
+>>>>>>> Stashed changes
+
+                @router.callback_query(F.data == 'answer_b',Order_answer.choosing_option)
+                async def answer(callback_query: types.CallbackQuery):
+                    await state.update_data(otvet='b')
+
+                await state.set_state(Order_answer.result)
 
 
 
