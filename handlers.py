@@ -15,7 +15,6 @@ from aiogram.fsm.storage.memory import MemoryStorage
 import json
 import sqlite3
 from kb import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
-import text
 import work_with_db
 # from prof_test import test_holland
 
