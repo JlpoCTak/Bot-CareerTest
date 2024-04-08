@@ -187,7 +187,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
             elif len(max_ball_group)>1:
                 await callback.message.answer(f'По итогам теста мы определили {len(max_ball_group)} типов личности, с профессиями, '
                                  f'которые могут вам подойти.')
-            await asyncio.sleep(5)
+            await asyncio.sleep(3)
             await callback.message.answer('Вот названия типов и что они означают')
             await asyncio.sleep(3)
             # if 'social' in max_ball_group:
@@ -199,7 +199,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
                                  f'приспосабливается к обстановке, пластичен, трудолюбив.'
                                  f' Люди,относящиеся к этому типу, предпочитают выполнять работу, требующую '
                                  f'силы, ловкости, подвижности, хорошей координации движений, навыков практической работы.')
-                await asyncio.sleep(10)
+                await asyncio.sleep(3)
             if 'intelligent' in max_ball_group:
                 await callback.message.answer(f'<strong>Интеллектуальный (исследовательский)</strong> – ориентирован на труд '
                                  f'с идеями и с вещами (объектами). Присуща как пластичность, так и '
@@ -218,7 +218,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
                                  f'Люди этого типа гуманны, чувствительны, активны, ориентированы на социальные нормы, способны '
                                  f'понять эмоциональное состояние другого человека. Для них характерно '
                                  f' прийти на помощь.')
-                await asyncio.sleep(10)
+                await asyncio.sleep(3)
             if 'conventional' in max_ball_group:
                 await callback.message.answer(f'<strong>Конвенциальный</strong> – отдает предпочтение четко '
                                  f'структурированной деятельности. Выбирает такие цели и задачи, которые '
@@ -232,7 +232,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
                                  f'в виде условных знаков, цифр, формул, текстов (ведение документации, '
                                  f'установление количественных соотношений между числами и условными '
                                  f'знаками).')
-                await asyncio.sleep(10)
+                await asyncio.sleep(3)
             if 'enterprising' in max_ball_group:
                 await callback.message.answer(f' <strong>Предприимчивый</strong> – выбирает цели и задачи, которые позволяют '
                                  f'ему проявить энергию, энтузиазм. Сочетаются импульсивность и '
@@ -243,7 +243,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
                                  f'Люди этого типа находчивы, практичны, быстро ориентируются в сложной '
                                  f'обстановке, склонны к самостоятельному принятию решений, социально '
                                  f'активны, готовы рисковать, ищут острые ощущения. Любят и умеют общаться.')
-                await asyncio.sleep(10)
+                await asyncio.sleep(3)
             if 'artistic' in max_ball_group:
                 await callback.message.answer(f'<strong>Артистический</strong> – сложный взгляд на жизнь, гибкость и '
                                  f'независимость в принятии решений.Предпочитает занятия творческого характера. '
@@ -254,7 +254,7 @@ async def final(callback: types.CallbackQuery, state: FSMContext):
                                  f'решений, редко ориентируются на социальные нормы и одобрение, '
                                  f'обладают необычным взглядом на жизнь, гибкостью мышления, '
                                  f'эмоциональной чувствительностью. ')
-                await asyncio.sleep(10)
+                await asyncio.sleep(3)
 
             keyboard = InlineKeyboardBuilder()
             for i in range(len(max_ball_group)):
@@ -521,11 +521,107 @@ async def test_restart(msg: Message,):
     await msg.answer("Вы хотите посмотреть результаты теста", reply_markup=keyboard.as_markup(resize_keyboards=True))
 
 
-@router.message(F.text == "Посмотреть специальности в выбранном городе:")
+@router.message(F.text == "Посмотреть психотипы:")
 async def specs_list(msg: Message):
-    keyboard = InlineKeyboardBuilder()
-    keyboard.add(InlineKeyboardButton(
-        text="Выбрать специальность",
-        callback_data="professions_"
-    ))
-    await msg.answer("Выбрать специальность", reply_markup=keyboard.as_markup(resize_keyboards=True))
+    with open('database/holland_table.json', 'r', encoding='utf-8') as holland_table:
+        with sqlite3.connect('database/users.db') as connection:
+            cursor = connection.cursor()
+
+            dict_prof = {'realistic': 0, 'intelligent': 0, 'social': 0, 'conventional': 0, 'enterprising': 0,
+                         'artistic': 0}
+            max_ball_group = []
+            hol_table = json.load(holland_table)
+            tg_user_id = msg.from_user.id
+            answer_list = []
+            for i in range(42):
+                answer = cursor.execute(f'''SELECT answ_{i + 1} FROM users_answer WHERE tg_user_id = ?''',
+                                        (tg_user_id,))
+                for ans in answer:
+                    answer_list.append(ans[0])
+            # print(answer_list) #готовый список с ответами
+            for i in range(42):
+                answ = str(i + 1) + answer_list[i]
+                for group in hol_table:
+                    if answ in hol_table[group]:
+                        dict_prof[group] += 1
+
+            for group in dict_prof:
+                if dict_prof[group] == max(dict_prof.values()):
+                    max_ball_group.append(group)
+            # print(max_ball_group) полученная(ые) группы с макс баллом
+
+        if 'realistic' in max_ball_group:
+            await msg.answer(f'<strong>Реалистический</strong> – предпочитает работать с вещами, а не с '
+                                          f'людьми. Это несоциальный, эмоционально-стабильный тип.'
+                                          f'. Занимается конкретными объектами и их использованием (вещи, инструменты, техника). Хорошо'
+                                          f'приспосабливается к обстановке, пластичен, трудолюбив.'
+                                          f' Люди,относящиеся к этому типу, предпочитают выполнять работу, требующую '
+                                          f'силы, ловкости, подвижности, хорошей координации движений, навыков практической работы.')
+            await asyncio.sleep(1)
+        if 'intelligent' in max_ball_group:
+            await msg.answer(
+                f'<strong>Интеллектуальный (исследовательский)</strong> – ориентирован на труд '
+                f'с идеями и с вещами (объектами). Присуща как пластичность, так и '
+                f'ригидность в действиях. '
+                f'Отличается целеустремленностью, настойчивостью, терпеливостью. '
+                f'Людей, относящихся к этому типу, отличают аналитические способности, рационализм, '
+                f'независимость и оригинальность мышления, умение точно формулировать '
+                f'и излагать свои мысли, решать логические задачи, генерировать новые '
+                f'идеи. Они часто выбирают научную и исследовательскую работу. Им '
+                f'нужна свобода для творчества.')
+        if 'social' in max_ball_group:
+            await msg.answer(
+                f' <strong>Социальный</strong> – ориентирован на общение, взаимодействие с другими людьми.'
+                f'Предпочитает работать с людьми, а не с вещами. '
+                f'Развитые вербальные способности, повышенная'
+                f'приспособляемость «пластичность» к меняющейся обстановке. '
+                f'Люди этого типа гуманны, чувствительны, активны, ориентированы на социальные нормы, способны '
+                f'понять эмоциональное состояние другого человека. Для них характерно '
+                f' прийти на помощь.')
+            await asyncio.sleep(1)
+        if 'conventional' in max_ball_group:
+            await msg.answer(f'<strong>Конвенциальный</strong> – отдает предпочтение четко '
+                                          f'структурированной деятельности. Выбирает такие цели и задачи, которые '
+                                          f'четко подтверждаются обществом и обычаями. '
+                                          f'Характерны консерватизм, '
+                                          f'ригидность, но обладает хорошими навыками общения, а также '
+                                          f'моторными навыками. Настойчив, практичен, дисциплинирован, '
+                                          f'добросовестен. Преобладают невербальные способности, прекрасный '
+                                          f'исполнитель. Люди этого типа обычно проявляют склонность к работе, '
+                                          f'связанной с обработкой и систематизацией информации, предоставленной '
+                                          f'в виде условных знаков, цифр, формул, текстов (ведение документации, '
+                                          f'установление количественных соотношений между числами и условными '
+                                          f'знаками).')
+            await asyncio.sleep(1)
+        if 'enterprising' in max_ball_group:
+            await msg.answer(
+                f' <strong>Предприимчивый</strong> – выбирает цели и задачи, которые позволяют '
+                f'ему проявить энергию, энтузиазм. Сочетаются импульсивность и '
+                f'холодный расчет. Наделен как вербальными, так и невербальными '
+                f'способностями, обладает интуицией и навыками эффективного '
+                f'межличностного взаимодействия. Интересуется различными сферами '
+                f'жизни и деятельности. Предпочитает работать с людьми и идеями. '
+                f'Люди этого типа находчивы, практичны, быстро ориентируются в сложной '
+                f'обстановке, склонны к самостоятельному принятию решений, социально '
+                f'активны, готовы рисковать, ищут острые ощущения. Любят и умеют общаться.')
+            await asyncio.sleep(1)
+        if 'artistic' in max_ball_group:
+            await msg.answer(f'<strong>Артистический</strong> – сложный взгляд на жизнь, гибкость и '
+                                          f'независимость в принятии решений.Предпочитает занятия творческого характера. '
+                                          f'Преобладают вербальные способности. Для этого типа характерны '
+                                          f'исключительные способности восприятия и моторики, высокая '
+                                          f'чувствительность всех анализаторов. '
+                                          f'Люди этого типа оригинальны, независимы в принятии '
+                                          f'решений, редко ориентируются на социальные нормы и одобрение, '
+                                          f'обладают необычным взглядом на жизнь, гибкостью мышления, '
+                                          f'эмоциональной чувствительностью. ')
+            await asyncio.sleep(1)
+
+        keyboard = InlineKeyboardBuilder()
+        for i in range(len(max_ball_group)):
+            keyboard.row(InlineKeyboardButton(
+                text=f'{max_ball_group[i]}',
+                callback_data=f'group_{max_ball_group[i]}'
+            ))
+        await msg.answer("Выберите психотип, который вам больше подходит", reply_markup=keyboard.as_markup(resize_keyboards=True))
+
