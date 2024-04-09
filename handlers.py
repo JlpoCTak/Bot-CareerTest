@@ -52,7 +52,7 @@ async def start_handler(msg: Message, state: FSMContext):
     dict_num_ques = {}
     dict_num_ques['number_question'] = 0
     await state.set_data(dict_num_ques)
-    await msg.delete()
+    
 
 
 @router.callback_query(F.data == 'Test')
