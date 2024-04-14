@@ -461,7 +461,7 @@ async def menu(msg: Message, state: FSMContext):
 types.KeyboardButton(text='Перепройти тест'),
         types.KeyboardButton(text='Посмотреть результат теста'),
         types.KeyboardButton(text='Показать город'),
-        types.KeyboardButton(text=f'Посмотреть специальности в выбранном городе:')
+        types.KeyboardButton(text=f'Посмотреть психотипы:')
         )
     keyboard.adjust(1)
     await msg.answer("Выберите действие", reply_markup=keyboard.as_markup(resize_keyboards=True))
